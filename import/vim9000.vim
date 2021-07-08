@@ -93,9 +93,9 @@ def UseStargate(destinations: dict<any>)
   var nr: number
   var err: bool
   var stargates = copy(destinations)
+  StandardMessage('Select a stargate for a jump.')
   while true
     var filtered = {}
-    StandardMessage('Select a stargate for a jump.')
     [nr, err] = SafeGetChar()
 
     if err || nr == 27
@@ -119,6 +119,7 @@ def UseStargate(destinations: dict<any>)
       HideLabels(stargates)
       ShowFiltered(filtered)
       stargates = copy(filtered)
+      StandardMessage('Select a stargate for a jump.')
     endif
   endwhile
 enddef
