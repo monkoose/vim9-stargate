@@ -82,6 +82,7 @@ def InputLoop(galaxies: dict<dict<number>>, independent: bool): number
   var err = false
   while true
     [nr, err] = SafeGetChar()
+
     if err || nr == 27
       return 0
     endif
@@ -130,14 +131,20 @@ export def ChangeGalaxy(independent: bool): number
   readfile(g:stargate_labels)->setbufline(buf_nr, 1)
   CurrentGalaxyToFirst(galaxies_info)
   const galaxies = DisplayGalaxiesLabels(buf_nr, galaxies_info)
-  StandardMessage('Choose a galaxy for the hyperjump, ' .. g:stargate_name .. '.')
+  var result: number
 
-  const result = InputLoop(galaxies, independent)
-  for galaxy in values(galaxies)
-    popup_close(galaxy.popupid)
-  endfor
+  try
+    StandardMessage('Choose a galaxy for the hyperjump, ' .. g:stargate_name .. '.')
+    result = InputLoop(galaxies, independent)
+  catch
+    :echom v:exception
+  finally
+    for galaxy in values(galaxies)
+      popup_close(galaxy.popupid)
+    endfor
+  endtry
 
-  if !independent
+  if !independent && result
     StandardMessage("Now choose a destination.")
   else
     BlankMessage()

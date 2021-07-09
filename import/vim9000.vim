@@ -49,10 +49,10 @@ enddef
 
 
 def Goodbye()
-  BlankMessage()
   for v in values(g:stargate_popups)
     popup_hide(v)
   endfor
+  prop_remove({ type: 'sg_error' }, g:stargate_near, g:stargate_distant)
   Saturate()
   Unfocus()
   HideShip()
@@ -64,17 +64,22 @@ enddef
 
 
 export def OkVIM(pattern: string)
-  Greetings()
-  var destinations: dict<any>
-  if empty(pattern)
-    destinations = ChooseDestinations()
-  else
-    destinations = GetDestinations(pattern)
-  endif
-  if !empty(destinations)
-    UseStargate(destinations)
-  endif
-  Goodbye()
+  try
+    Greetings()
+    var destinations: dict<any>
+    if empty(pattern)
+      destinations = ChooseDestinations()
+    else
+      destinations = GetDestinations(pattern)
+    endif
+    if !empty(destinations)
+      UseStargate(destinations)
+    endif
+  catch
+    :echom v:exception
+  finally
+    Goodbye()
+  endtry
 enddef
 
 
@@ -99,6 +104,7 @@ def UseStargate(destinations: dict<any>)
     [nr, err] = SafeGetChar()
 
     if err || nr == 27
+      BlankMessage()
       return
     endif
 
@@ -113,6 +119,7 @@ def UseStargate(destinations: dict<any>)
     if empty(filtered)
       Error('Wrong stargate, ' .. g:stargate_name .. '. Choose another one.')
     elseif len(filtered) == 1
+      BlankMessage()
       cursor(filtered[''].orbit, filtered[''].degree)
       return
     else
@@ -133,6 +140,7 @@ def ChooseDestinations(): dict<any>
     [nr, err] = SafeGetChar()
 
     if err || nr == 27
+      BlankMessage()
       return {}
     endif
 
@@ -151,6 +159,7 @@ def ChooseDestinations(): dict<any>
       Error("We can't reach there, " .. g:stargate_name .. '.')
       continue
     elseif len(destinations) == 1
+      BlankMessage()
       cursor(destinations.jump.orbit, destinations.jump.degree)
       return {}
     end
