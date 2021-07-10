@@ -3,7 +3,7 @@ vim9script
 
 # Returns first window column number after signcolumn
 # Required because there are no easy way to get width of the signcolumn in vim
-export def DashboardLeftEdge(): number
+export def DisplayLeftEdge(): number
   const view = winsaveview()
   const ve = &virtualedit
   &virtualedit = 'all'
@@ -23,7 +23,7 @@ enddef
 
 # Returns first and last visible virtual columns of the buffer in the current window
 export def OrbitalArc(): dict<number>
-  const edge = DashboardLeftEdge()
+  const edge = DisplayLeftEdge()
   var last_degree = 0
   var first_degree = virtcol('.') - wincol() + edge
   if first_degree > 1 && ListcharsHasPrecedes()
