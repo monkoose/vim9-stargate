@@ -9,6 +9,7 @@ import { SafeGetChar,
          HideShip } from 'workstation.vim'
 
 const labels = [' ', 'f', 'j', 'd', 'l', 's', 'h', 'g', 'a']
+const galaxy_labels = expand('<sfile>:p:h:h') .. '/galaxy_labels'
 
 
 # Swap current window info into 0 index of `wininfo` parameter
@@ -110,7 +111,7 @@ enddef
 
 
 export def ChangeGalaxy(independent: bool): number
-  if !filereadable(g:stargate_labels)
+  if !filereadable(galaxy_labels)
     ErrorMessage("Internal error, can't display galaxies.")
     return 0
   endif
@@ -128,7 +129,7 @@ export def ChangeGalaxy(independent: bool): number
   const buf_nr = bufadd('galaxy_labels')
   setbufvar(buf_nr, '&buftype', 'popup')
   bufload(buf_nr)
-  readfile(g:stargate_labels)->setbufline(buf_nr, 1)
+  readfile(galaxy_labels)->setbufline(buf_nr, 1)
   CurrentGalaxyToFirst(galaxies_info)
   const galaxies = DisplayGalaxiesLabels(buf_nr, galaxies_info)
   var result: number

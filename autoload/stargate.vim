@@ -9,7 +9,6 @@ g:stargate_limit = get(g:, 'stargate_limit', 300)
 g:stargate_chars = get(g:, 'stargate_chars', 'fjdklshgaewiomc')->split('\zs')
 g:stargate_name = get(g:, 'stargate_name', 'Human')
 g:stargate_keymaps = get(g:, 'stargate_keymaps', {})
-g:stargate_labels = expand('<sfile>:p:h:h') .. '/galaxy_labels'
 
 def Highlight()
   :highlight default StargateFocus guifg=#958c6a
