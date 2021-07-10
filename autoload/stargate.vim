@@ -7,9 +7,9 @@ import { ChangeGalaxy } from 'galaxies.vim'
 g:stargate_ignorecase = get(g:, 'stargate_ignorecase', true)
 g:stargate_limit = get(g:, 'stargate_limit', 300)
 g:stargate_chars = get(g:, 'stargate_chars', 'asdfghjklewiomc')->split('\zs')
-g:stargate_labels = get(g:, 'stargate_labels', expand('<sfile>:p:h:h') .. '/galaxy_labels')
 g:stargate_name = get(g:, 'stargate_name', 'Human')
 g:stargate_keymaps = get(g:, 'stargate_keymaps', {})
+g:stargate_labels = expand('<sfile>:p:h:h') .. '/galaxy_labels'
 
 def Highlight()
   :highlight default StargateFocus guifg=#958c6a
