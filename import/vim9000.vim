@@ -139,11 +139,13 @@ def ChooseDestinations(): dict<any>
   while true
     [nr, err] = SafeGetChar()
 
+    # 27 is <Esc>
     if err || nr == 27
       BlankMessage()
       return {}
     endif
 
+    # 23 is <C-w>
     if nr == 23
       # do not change window if in visual or operator-pending modes
       if is_visual || state()[0] == 'o'
