@@ -50,7 +50,7 @@ def GalaxyLabel(buf_nr: number, line_nr: number, wininfo: dict<any>): number
 enddef
 
 
-# Creates popup with labels for all windows in the current tabpage
+# Creates popups with labels for all windows in the current tabpage
 def DisplayGalaxiesLabels(buf_nr: number, wininfo: list<dict<any>>): dict<any>
   var galaxies = {}
   for i in range(len(wininfo))
@@ -72,7 +72,7 @@ def LabelsError(gal: dict<any>)
     ErrorMessage("Our ship can't reach that galaxy, " .. g:stargate_name)
   enddef
 
-  Recolor('StargateErrorLabels')
+  timer_start(5, (t) => Recolor('StargateErrorLabels'))
   timer_start(150, (t) => Recolor('StargateLabels'))
 enddef
 

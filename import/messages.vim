@@ -28,8 +28,12 @@ export def Error(message: string)
     ErrorMessage(message)
   enddef
 
-  prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant, end_col: 5000, type: 'sg_error' })
-  ErrorMessage(message)
+  timer_start(5, (_) => {
+    prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant,
+                                   end_col: 5000,
+                                   type: 'sg_error' })
+    ErrorMessage(message)
+  })
   timer_start(150, RemoveError)
 enddef
 
