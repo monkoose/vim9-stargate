@@ -65,12 +65,10 @@ enddef
 # found in g:stargate_keymaps or unmodified
 def ProcessKeymap(pattern: string): string
   var pat = pattern
-  const rhs = get(g:stargate_keymaps, pat, "")
+  const rhs = get(g:stargate_keymaps, pat, '')
   if !empty(rhs)
-    const alt = split(rhs, '\zs')
-                    ->mapnew((_, c) => '\|' .. c)
-                    ->join('')
-    pat = '\(' .. pat .. alt .. '\)'
+    const alt = rhs->split('\zs')->join('\|')
+    pat = '\(' .. pat .. '\|' .. alt .. '\)'
   endif
 
   return pat
@@ -103,6 +101,7 @@ export def LabelLists(chars: list<string>, length: number): dict<any>
   const one_less = chars_len - 1
   var total_len = length
   var labels = [copy(chars)]
+
   var index = 0
   var i1 = index / chars_len
   var i2 = index % chars_len
@@ -114,6 +113,7 @@ export def LabelLists(chars: list<string>, length: number): dict<any>
     i1 = index / chars_len
     i2 = index % chars_len
   endwhile
+
   const labels_len = len(labels)
   const end_row = labels_len - 1
   const end_col = chars_len - (labels_len * chars_len - length - index + 1)
@@ -130,7 +130,7 @@ enddef
 
 
 # Returns new list with each string element in it prefixed with `char`
-# ConcatFirst(['x', 'y', 'z'], 'a') -> ['ax', 'ay', 'az']
+# MapnewConcat(['x', 'y', 'z'], 'a') -> ['ax', 'ay', 'az']
 def MapnewConcat(strings: list<string>, char: string): list<string>
   var result = []
   for str in strings
@@ -150,7 +150,7 @@ export def SafeGetChar(): list<any>
     if type(nr) != v:t_number
       nr = -1
     endif
-  catch /.*/
+  catch
     err = true
   endtry
   return [nr, err]
@@ -182,3 +182,5 @@ enddef
 export def HideShip()
   prop_remove({ type: 'sg_ship' }, g:stargate_near, g:stargate_distant)
 enddef
+
+defcompile
