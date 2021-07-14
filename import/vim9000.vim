@@ -63,14 +63,16 @@ def Goodbye()
 enddef
 
 
-export def OkVIM(pattern: string)
+export def OkVIM(mode: any)
   try
     Greetings()
     var destinations: dict<any>
-    if empty(pattern)
-      destinations = ChooseDestinations()
+    if type(mode) == v:t_number
+      g:stargate_mode = mode
+      destinations = ChooseDestinations(mode)
     else
-      destinations = GetDestinations(pattern)
+      g:stargate_mode = 0
+      destinations = GetDestinations(mode)
     endif
     if !empty(destinations)
       UseStargate(destinations)
@@ -132,21 +134,33 @@ def UseStargate(destinations: dict<any>)
 enddef
 
 
-def ChooseDestinations(): dict<any>
+def ChooseDestinations(mode: number): dict<any>
   var nr: number
   var err: bool
+  var to_galaxy: bool
   var destinations = {}
   while true
-    [nr, err] = SafeGetChar()
+    var nrs = []
+    for _ in range(mode)
+      [nr, err] = SafeGetChar()
 
-    # 27 is <Esc>
-    if err || nr == 27
-      BlankMessage()
-      return {}
-    endif
+      # 27 is <Esc>
+      if err || nr == 27
+        BlankMessage()
+        return {}
+      endif
 
-    # 23 is <C-w>
-    if nr == 23
+      # 23 is <C-w>
+      if nr == 23
+        to_galaxy = true
+        break
+      endif
+
+      nrs->add(nr)
+    endfor
+
+    if to_galaxy
+      to_galaxy = false
       # do not change window if in visual or operator-pending modes
       if is_visual || state()[0] == 'o'
         Error('It is impossible to do now, ' .. g:stargate_name .. '.')
@@ -156,7 +170,10 @@ def ChooseDestinations(): dict<any>
       continue
     endif
 
-    destinations = GetDestinations(nr2char(nr))
+    destinations = GetDestinations(nrs
+                                    ->mapnew((_, v) => nr2char(v))
+                                    ->join(''))
+    # destinations = GetDestinations(nr2char(nr))
     if empty(destinations)
       Error("We can't reach there, " .. g:stargate_name .. '.')
       continue

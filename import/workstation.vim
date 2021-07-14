@@ -63,13 +63,16 @@ enddef
 
 # Returns new pattern with all alternative branches for pattern
 # found in g:stargate_keymaps or unmodified
-def ProcessKeymap(pattern: string): string
-  var pat = pattern
-  const rhs = get(g:stargate_keymaps, pat, '')
-  if !empty(rhs)
-    const alt = rhs->split('\zs')->join('\|')
-    pat = '\(' .. pat .. '\|' .. alt .. '\)'
-  endif
+def g:ProcessKeymap(pattern: string): string
+  var pat: string
+  for char in (split(pattern, '\zs'))
+    const rhs = get(g:stargate_keymaps, char, '')
+    if empty(rhs)
+      pat ..= char
+    else
+      pat ..= '\[' .. char .. rhs .. ']'
+    endif
+  endfor
 
   return pat
 enddef
@@ -77,7 +80,7 @@ enddef
 
 # Returns modified pattern so it can be processed by searchpos()
 export def TransformPattern(pattern: string): string
-  if strdisplaywidth(pattern) > 1
+  if !g:stargate_mode
     return pattern
   elseif pattern == ' '
     return '\S\zs\s'

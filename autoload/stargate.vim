@@ -32,26 +32,26 @@ augroup END
 Highlight()
 
 if empty(prop_type_get('sg_focus'))
-  prop_type_add('sg_focus', { highlight: 'StargateFocus', combine: false, priority: 195})
+  prop_type_add('sg_focus', { highlight: 'StargateFocus', combine: false, priority: 1000})
 endif
 
 if empty(prop_type_get('sg_desaturate'))
-  prop_type_add('sg_desaturate', { highlight: 'StargateDesaturate', combine: false, priority: 200})
+  prop_type_add('sg_desaturate', { highlight: 'StargateDesaturate', combine: false, priority: 1005})
 endif
 
 if empty(prop_type_get('sg_error'))
-  prop_type_add('sg_error', { highlight: 'StargateError', combine: false, priority: 205 })
+  prop_type_add('sg_error', { highlight: 'StargateError', combine: false, priority: 1010 })
 endif
 
 if empty(prop_type_get('sg_ship'))
-  prop_type_add('sg_ship', { highlight: 'StargateShip', combine: false, priority: 210})
+  prop_type_add('sg_ship', { highlight: 'StargateShip', combine: false, priority: 1015})
 endif
 
 # Precreate hidden popup windows for stargates hints
 CreatePopups()
 
-def stargate#ok_vim(pattern = '')
-  OkVIM(pattern)
+def stargate#ok_vim(mode: any)
+  OkVIM(mode)
 enddef
 
 def stargate#galaxy()

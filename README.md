@@ -4,37 +4,43 @@
 
 You can think of **stargate** as simplified modern alternative to
 [easymotion](https://github.com/easymotion/vim-easymotion) for vim 8.2+. It
-uses popups windows to show hints, so it will not modify the content of your
-buffer, because of that used linter plugins will not get mad. It is created for
-just one purpose - jump to any visible character in the current window without
-thinking of where your cursor is. Stargate do not support all the features of
-easymotion and will never do.
+uses [popups windows](https://vimhelp.org/popup.txt.html) to show hints, so it
+will not modify the content of your buffer and because of that linter plugins
+will not get mad. It is created for just one purpose - jump to any visible
+character in the current window without thinking of where your cursor is.
+Stargate do not support all the features of easymotion and will never do.
 
 ## Motivation
 
 There are few things that I wanted easymotion to have. First is already
-mentioned problem with linter plugins, and the second is that using non-English
-language in your code/text will make harder to navigate in a buffer with
-easymotion, because to jump to non-English character require switching your
-locale multiple times (first to choose this character, and second to go back to
-English and select a hint). Look at `g:stargate_keymaps` for that.
+mentioned problem with linter plugins, and the second one is that using
+non-English language in your code/text makes it harder to navigate in a buffer
+with easymotion, because to jump to non-English character require switching
+your locale multiple times (first to choose this character, and second to go
+back to English and select a hint). Look at `g:stargate_keymaps` for that.
 
 ## Usage
 
 Stargate by default doesn't add any command or mapping. So at the same time it
 doesn't add anything to vim startup time. To use it, just need to create a
 mapping and call stargate function, like so
-```
-noremap <leader>f <Cmd>call stargate#ok_vim()<CR>
+```vim
+" For 1 character to search before showing hints
+noremap <leader>f <Cmd>call stargate#ok_vim(1)<CR>
+" For 2 consecutive characters to search
+noremap <leader>F <Cmd>call stargate#ok_vim(2)<CR>
+
+" Instead of 1 or 2 you can use any higher number, but it isn't much practical
+and it is easier to use `/` or `?` for that
 ```
 Notice that it is `noremap` and not `nnoremap` so stargate will work, not only
 in normal mode but also in visual and operator-pending modes. Do not use `:call
-...`, `<Cmd>call ...` is required, or stargate will behave not as you want it to.
+...`, `<Cmd>call ...` is required, or plugin will behave not as you want it to.
 
-To swap to a different window when stargate is enabled (but not in a hints
+To change current window when stargate is enabled (but not in a hints
 mode) just press `<C-w>`, so then you can choose window label to swap to it
 (`space` to return into the current window). If for some reason you want to use
-this feature outside of stargate itself you can map it like so
+this feature outside of stargate plugin itself you can map this feature like so
 ```
 nnoremap <leader>w <Cmd>call stargate#galaxy()<CR>
 ```
@@ -42,16 +48,16 @@ And here we actually have `nnoremap` this time , because it makes no sense to
 swap to another window in visual or operator-pending modes.
 
 If you need another jump locations like easymotion jump to start of word, or
-start of line etc. You can use `stargate#ok_vim()` function with just vim
-pattern as argument.
+start of line etc. You can use `stargate#ok_vim()` with a string as its only
+argument. This string is just vim regexp.
 ```vim
-" for the start of word
+" for the start of a word
 noremap <leader>w <Cmd>call stargate#ok_vim("\<")
-" for the start of line
+" for the start of a line
 noremap <leader>l <Cmd>call stargate#ok_vim("\_^")
-" for the end of word
+" for the end of a word
 noremap <leader>e <Cmd>call stargate#ok_vim("\>")
-" for any of bracket, parentheses or curly
+" for any bracket, parentheses or curly bracket
 noremap <leader>[ <Cmd>call stargate#ok_vim("\[(){}[\\]]")<CR>
 ```
 So possible jump locations are limited only by your knowledge of vim regexp.
@@ -68,11 +74,11 @@ So possible jump locations are limited only by your knowledge of vim regexp.
 | `g:stargate_name`       | How should VIM9000 call you.              | `'Human'`           |
 | `g:stargate_keymaps`    | Dict of all possible keymaps.<sup>2</sup> | `{}`                |
 
-**1** - This limit required, because spawn a lot of popups is slow in vim, so
-we should limit it. You can increase it if you have found, that it sometimes
-limits your search results, but for any practical sense 300 is enough.
+**1** - This limit required, because spawn a lot of popups is slow in vim. You
+can increase it if you have found, that it sometimes limits your search
+results, but for any practical sense default value is enough.
 
-**2** - As example for russian language it can look like this
+**2** - As an example for russian language it can look like this
 ```vim
 let g:stargate_keymaps = {
       \ "~": "Ё",
@@ -85,7 +91,7 @@ let g:stargate_keymaps = {
       \   "z": "я", "x": "ч", "c": "с", "v": "м", "b": "и", "n": "т", "m": "ь", ",": "б", ".": "ю"
       \ }
 ```
-You can add as many chars in a string as you want, and they all will be
+You can add as many chars in a string as you want, and all of them will be
 searched for that dictionary key. As example to search for `t`, `е` (it's
 russian е) and `ё` with only `t` search
 ```
