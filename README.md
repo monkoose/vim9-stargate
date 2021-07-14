@@ -47,6 +47,8 @@ nnoremap <leader>w <Cmd>call stargate#galaxy()<CR>
 And here we actually have `nnoremap` this time , because it makes no sense to
 swap to another window in visual or operator-pending modes.
 
+To quit stargate at any moment press `<Esc>` or `<C-c>`.
+
 If you need another jump locations like easymotion jump to start of word, or
 start of line etc. You can use `stargate#ok_vim()` with a string as its only
 argument. This string is just vim regexp.
