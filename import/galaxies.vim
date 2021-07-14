@@ -62,13 +62,11 @@ enddef
 
 
 def LabelsError(gal: dict<any>)
-  ErrorMessage("Our ship can't reach that galaxy, " .. g:stargate_name)
   const galaxies = values(gal)
   def Recolor(highlight: string)
     for galaxy in galaxies
       popup_setoptions(galaxy.popupid, { highlight: highlight })
     endfor
-    # this duplicate message in the timer required, so cursor stays in commandline
     ErrorMessage("Our ship can't reach that galaxy, " .. g:stargate_name)
   enddef
 
@@ -77,7 +75,7 @@ def LabelsError(gal: dict<any>)
 enddef
 
 
-# Switch to the labeled window and returns 1, on error or <Esc> returns 0
+# Switch to the labeled window and return 1, on error or <Esc> returns 0
 def InputLoop(galaxies: dict<dict<number>>, independent: bool): number
   var nr: number
   var err = false
@@ -88,7 +86,8 @@ def InputLoop(galaxies: dict<dict<number>>, independent: bool): number
       return 0
     endif
 
-    const destination = copy(galaxies)->filter((k, _) => k == nr2char(nr))
+    const char = nr2char(nr)
+    const destination = copy(galaxies)->filter((k, _) => k == char)
     if empty(destination)
       LabelsError(galaxies)
       continue
@@ -98,7 +97,7 @@ def InputLoop(galaxies: dict<dict<number>>, independent: bool): number
       Unfocus()
       HideShip()
     endif
-    win_gotoid(destination[nr2char(nr)].winid)
+    win_gotoid(destination[char].winid)
     if !independent
       [g:stargate_near, g:stargate_distant] = ReachableOrbits()
       ShowShip()
@@ -119,6 +118,8 @@ export def ChangeGalaxy(independent: bool): number
   const tabnr = tabpagenr()
   var galaxies_info = getwininfo()->filter((_, v) => v.tabnr == tabnr)
   if len(galaxies_info) == 1
+    # when starts with stargate#galaxy() call we need to set g variables
+    # to highlight that range on error
     if independent
       [g:stargate_near, g:stargate_distant] = ReachableOrbits()
     endif
@@ -153,3 +154,5 @@ export def ChangeGalaxy(independent: bool): number
 
   return result
 enddef
+
+defcompile
