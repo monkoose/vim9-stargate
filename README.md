@@ -31,7 +31,7 @@ noremap <leader>f <Cmd>call stargate#ok_vim(1)<CR>
 noremap <leader>F <Cmd>call stargate#ok_vim(2)<CR>
 
 " Instead of 1 or 2 you can use any higher number, but it isn't much practical
-and it is easier to use `/` or `?` for that
+" and it is easier to use `/` or `?` for that
 ```
 Notice that it is `noremap` and not `nnoremap` so stargate will work, not only
 in normal mode but also in visual and operator-pending modes. Do not use `:call
@@ -41,7 +41,7 @@ To change current window when stargate is enabled (but not in a hints
 mode) just press `<C-w>`, so then you can choose window label to swap to it
 (`space` to return into the current window). If for some reason you want to use
 this feature outside of stargate plugin itself you can map this feature like so
-```
+```vim
 nnoremap <leader>w <Cmd>call stargate#galaxy()<CR>
 ```
 And here we actually have `nnoremap` this time , because it makes no sense to
@@ -94,11 +94,11 @@ let g:stargate_keymaps = {
 You can add as many chars in a string as you want, and all of them will be
 searched for that dictionary key. As example to search for `t`, `е` (it's
 russian е) and `ё` with only `t` search
-```
+```vim
 let g:stargate_keymaps = { "t": "её" }
 ```
 Or to jump to any of bracket, parentheses or curly bracket on `[` search
-```
+```vim
 let g:stargate_keymaps = { "[": "[](){}" }
 ```
 
