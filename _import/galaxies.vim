@@ -1,12 +1,12 @@
 vim9script
 
-import { StandardMessage, ErrorMessage, Error, BlankMessage } from 'messages.vim'
+import { StandardMessage, ErrorMessage, Error, BlankMessage } from './messages.vim'
 import { SafeGetChar,
          ReachableOrbits,
          Focus,
          Unfocus,
          ShowShip,
-         HideShip } from 'workstation.vim'
+         HideShip } from './workstation.vim'
 
 const labels = [' ', 'f', 'j', 'd', 'l', 's', 'h', 'g', 'a', 'i', 'e', 'o', 'c', 'u']
 const galaxy_labels = expand('<sfile>:p:h:h') .. '/galaxy_labels'

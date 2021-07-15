@@ -6,7 +6,7 @@ import {
   TransformPattern,
   CreatePopups,
   OrbitsWithoutBlackmatter
-  } from "workstation.vim"
+  } from "./workstation.vim"
 
 
 def Desaturate()

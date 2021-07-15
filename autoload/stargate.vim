@@ -1,8 +1,8 @@
 vim9script
 
-import { CreatePopups } from 'workstation.vim'
-import { OkVIM } from 'vim9000.vim'
-import { ChangeGalaxy } from 'galaxies.vim'
+import { CreatePopups } from '../_import/workstation.vim'
+import { OkVIM } from '../_import/vim9000.vim'
+import { ChangeGalaxy } from '../_import/galaxies.vim'
 
 g:stargate_ignorecase = get(g:, 'stargate_ignorecase', true)
 g:stargate_limit = get(g:, 'stargate_limit', 300)

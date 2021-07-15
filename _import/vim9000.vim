@@ -1,14 +1,14 @@
 vim9script
 
-import { GetDestinations } from 'stargates.vim'
-import { ChangeGalaxy } from 'galaxies.vim'
-import { StandardMessage, Error, BlankMessage } from 'messages.vim'
+import { GetDestinations } from './stargates.vim'
+import { ChangeGalaxy } from './galaxies.vim'
+import { StandardMessage, Error, BlankMessage } from './messages.vim'
 import { SafeGetChar,
          ReachableOrbits,
          Focus,
          Unfocus,
          ShowShip,
-         HideShip } from 'workstation.vim'
+         HideShip } from './workstation.vim'
 
 var start_mode: string
 var is_visual: bool
