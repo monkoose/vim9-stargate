@@ -8,7 +8,7 @@ import { SafeGetChar,
          ShowShip,
          HideShip } from 'workstation.vim'
 
-const labels = [' ', 'f', 'j', 'd', 'l', 's', 'h', 'g', 'a']
+const labels = [' ', 'f', 'j', 'd', 'l', 's', 'h', 'g', 'a', 'i', 'e', 'o', 'c', 'u']
 const galaxy_labels = expand('<sfile>:p:h:h') .. '/galaxy_labels'
 
 
