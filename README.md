@@ -157,6 +157,6 @@ into your vimrc.
 
 ## TODO
 
-- [ ] Add vim documentation
+- [x] Add vim documentation
 - [ ] Add tests
 - [ ] Improve text grammar
