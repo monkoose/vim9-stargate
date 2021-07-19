@@ -54,6 +54,11 @@ enddef
 def CollectStars(orbits: list<number>, cur_loc: list<number>, pat: string): list<list<number>>
   var stars = []
   for orbit in orbits
+    if strdisplaywidth(getline(orbit)) > 5000
+      :redraw
+      :echoerr "stargate: lines are longer than 5000 characters. It can be slow, so plugin disabled."
+      return []
+    endif
     var orbital_stars = OrbitalStars(pat, 'Wnc', orbit)
     if orbit == cur_loc[0]
       for i in range(len(orbital_stars))
@@ -86,28 +91,6 @@ def GalaxyStars(pattern: string): list<list<number>>
 
   winrestview(view)
   return stars
-enddef
-
-
-export def GetDestinations(pattern: string): dict<any>
-  const destinations = pattern->TransformPattern()->GalaxyStars()
-  const length = len(destinations)
-
-  var stargates: dict<any>
-  if length == 0
-    stargates = {}
-  elseif length == 1
-    stargates = {jump: {orbit: destinations[0][0], degree: destinations[0][1]}}
-  elseif length > g:stargate_limit
-    :redraw
-    :echoerr "stargate: too much popups to show - " .. length
-    stargates = {}
-  else
-    Desaturate()
-    stargates = destinations->ShowStargates()
-  endif
-
-  return stargates
 enddef
 
 
@@ -150,6 +133,28 @@ def ShowStargates(destinations: list<list<number>>): dict<any>
     stargates[name] = { id: id, orbit: orbit, degree: degree, color: color, zindex: zindex }
     prev = { orbit: orbit, degree: degree, len: len(name), color: color }
   endfor
+
+  return stargates
+enddef
+
+
+export def GetDestinations(pattern: string): dict<any>
+  const destinations = pattern->TransformPattern()->GalaxyStars()
+  const length = len(destinations)
+
+  var stargates: dict<any>
+  if length == 0
+    stargates = {}
+  elseif length == 1
+    stargates = {jump: {orbit: destinations[0][0], degree: destinations[0][1]}}
+  elseif length > g:stargate_limit
+    :redraw
+    :echoerr "stargate: too much popups to show - " .. length
+    stargates = {}
+  else
+    Desaturate()
+    stargates = destinations->ShowStargates()
+  endif
 
   return stargates
 enddef

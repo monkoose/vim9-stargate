@@ -63,7 +63,7 @@ enddef
 
 # Returns new pattern with all alternative branches for pattern
 # found in g:stargate_keymaps or unmodified
-def g:ProcessKeymap(pattern: string): string
+def ProcessKeymap(pattern: string): string
   var pat: string
   for char in (split(pattern, '\zs'))
     const rhs = get(g:stargate_keymaps, char, '')
