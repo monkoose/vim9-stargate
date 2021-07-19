@@ -167,6 +167,12 @@ def ChooseDestinations(mode: number): dict<any>
       elseif !ChangeGalaxy(false)
         return {}
       endif
+      # if current window after the jump is in terminal or insert modes - quit stargate
+      if !match(mode(), '[ti]')
+        :redraw
+        :echoerr "stargate: can't work in terminal or insert mode."
+        return {}
+      endif
       continue
     endif
 
