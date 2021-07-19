@@ -38,6 +38,12 @@ export def Error(message: string)
 enddef
 
 
+export def InfoMessage(message: string)
+  :redraw
+  :echoerr message
+enddef
+
+
 export def BlankMessage()
   :redraw
   :echo ''

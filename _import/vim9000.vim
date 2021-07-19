@@ -2,7 +2,7 @@ vim9script
 
 import { GetDestinations } from './stargates.vim'
 import { ChangeGalaxy } from './galaxies.vim'
-import { StandardMessage, Error, BlankMessage } from './messages.vim'
+import { StandardMessage, Error, BlankMessage, InfoMessage } from './messages.vim'
 import { SafeGetChar,
          ReachableOrbits,
          Focus,
@@ -169,8 +169,7 @@ def ChooseDestinations(mode: number): dict<any>
       endif
       # if current window after the jump is in terminal or insert modes - quit stargate
       if !match(mode(), '[ti]')
-        :redraw
-        :echoerr "stargate: can't work in terminal or insert mode."
+        InfoMessage("stargate: can't work in terminal or insert mode.")
         return {}
       endif
       continue

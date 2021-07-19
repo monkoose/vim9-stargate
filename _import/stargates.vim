@@ -1,5 +1,6 @@
 vim9script
 
+import { InfoMessage } from "./messages.vim"
 import {
   LabelLists,
   OrbitalArc,
@@ -55,8 +56,7 @@ def CollectStars(orbits: list<number>, cur_loc: list<number>, pat: string): list
   var stars = []
   for orbit in orbits
     if strdisplaywidth(getline(orbit)) > 5000
-      :redraw
-      :echoerr "stargate: lines are longer than 5000 characters. It can be slow, so plugin disabled."
+      InfoMessage("stargate: lines are longer than 5000 characters. It can be slow, so plugin disabled.")
       return []
     endif
     var orbital_stars = OrbitalStars(pat, 'Wnc', orbit)
@@ -148,8 +148,7 @@ export def GetDestinations(pattern: string): dict<any>
   elseif length == 1
     stargates = {jump: {orbit: destinations[0][0], degree: destinations[0][1]}}
   elseif length > g:stargate_limit
-    :redraw
-    :echoerr "stargate: too much popups to show - " .. length
+    InfoMessage("stargate: too much popups to show - " .. length)
     stargates = {}
   else
     Desaturate()
