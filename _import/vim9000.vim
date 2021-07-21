@@ -113,7 +113,7 @@ def UseStargate(destinations: dict<any>)
     const char = nr2char(nr)
     for [label, stargate] in items(stargates)
       if !match(label, char)
-        const new_label = label[1 :]
+        const new_label = strcharpart(label, 1)
         filtered[new_label] = stargate
       endif
     endfor

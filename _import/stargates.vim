@@ -11,7 +11,7 @@ import {
 
 
 def Desaturate()
-  prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant, end_col: 5000, type: 'sg_desaturate' })
+  prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant, end_col: 2000, type: 'sg_desaturate' })
 enddef
 
 
@@ -55,8 +55,8 @@ enddef
 def CollectStars(orbits: list<number>, cur_loc: list<number>, pat: string): list<list<number>>
   var stars = []
   for orbit in orbits
-    if strdisplaywidth(getline(orbit)) > 5000
-      InfoMessage("stargate: lines are longer than 5000 characters. It can be slow, so plugin disabled.")
+    if strdisplaywidth(getline(orbit)) > 2000
+      InfoMessage("stargate: some visible line is longer than 2000 characters. It can be slow, so plugin disabled.")
       return []
     endif
     var orbital_stars = OrbitalStars(pat, 'Wnc', orbit)
@@ -112,20 +112,24 @@ def ShowStargates(destinations: list<list<number>>): dict<any>
 
   # Check if some outside force closed some of stargate popups
   # mostly for popup_clear(), will fail on some manual popup_remove(id)
-   if empty(popup_getpos(g:stargate_popups[g:stargate_chars[0]]))
-     for id in values(g:stargate_popups)
-       popup_close(id)
-     endfor
-     CreatePopups()
-   endif
+  if empty(popup_getpos(g:stargate_popups[g:stargate_chars[0]]))
+    for id in values(g:stargate_popups)
+      popup_close(id)
+    endfor
+    CreatePopups()
+  endif
 
+  const galaxy_distant_orbit = win_screenpos(0)[0] - 1 + winheight(0)
   for i in range(length)
-    const name = names[i]
     const orbit = destinations[i][0]
     const degree = destinations[i][1]
+    const scr_pos = screenpos(0, orbit, degree)
+    if scr_pos.row > galaxy_distant_orbit
+      break
+    endif
+    const name = names[i]
     const id = g:stargate_popups[name]
     const color = ChooseColor(prev, orbit, degree)
-    const scr_pos = screenpos(0, orbit, degree)
     const zindex = 100 + i
     popup_move(id, { line: scr_pos.row, col: scr_pos.col })
     popup_setoptions(id, { highlight: color, zindex: zindex })
