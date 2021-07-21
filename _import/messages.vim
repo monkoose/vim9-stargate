@@ -30,7 +30,7 @@ export def Error(message: string)
 
   timer_start(5, (_) => {
     prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant,
-                                   end_col: 2000,
+                                   end_col: 5000,
                                    type: 'sg_error' })
     ErrorMessage(message)
   })

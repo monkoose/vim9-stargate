@@ -37,9 +37,7 @@ enddef
 
 # Returns top and bottom visible lines numbers of the current window
 export def ReachableOrbits(): list<number>
-  const last = line('w$')
-  const distant = &wrap && last != line('$') ? last + 1 : last
-  return [line('w0'), distant]
+  return [line('w0'), line('w$')]
 enddef
 
 
@@ -173,7 +171,7 @@ enddef
 
 
 export def Focus()
-  prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant, end_col: 2000, type: 'sg_focus' })
+  prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant, end_col: 5000, type: 'sg_focus' })
 enddef
 
 export def Unfocus()

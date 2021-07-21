@@ -11,7 +11,7 @@ import {
 
 
 def Desaturate()
-  prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant, end_col: 2000, type: 'sg_desaturate' })
+  prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant, end_col: 5000, type: 'sg_desaturate' })
 enddef
 
 
@@ -55,8 +55,8 @@ enddef
 def CollectStars(orbits: list<number>, cur_loc: list<number>, pat: string): list<list<number>>
   var stars = []
   for orbit in orbits
-    if strdisplaywidth(getline(orbit)) > 2000
-      InfoMessage("stargate: some visible line is longer than 2000 characters. It can be slow, so plugin disabled.")
+    if strdisplaywidth(getline(orbit)) > 5000
+      InfoMessage("stargate: some visible line is longer than 5000 characters. It can be slow, so plugin disabled.")
       return []
     endif
     var orbital_stars = OrbitalStars(pat, 'Wnc', orbit)
