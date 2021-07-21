@@ -92,6 +92,7 @@ def ShowFiltered(stargates: dict<any>)
     popup_move(id, { line: scr_pos.row, col: scr_pos.col })
     popup_setoptions(id, { highlight: stargate.color, zindex: stargate.zindex })
     popup_show(id)
+    stargates[label].id = id
   endfor
 enddef
 
