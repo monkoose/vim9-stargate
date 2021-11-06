@@ -12,13 +12,8 @@ import { SafeGetChar,
 
 var start_mode: string
 var is_visual: bool
-
-
-def ToggleMatchParen(cmd: string)
-  if empty(getcmdwintype()) && exists(':DoMatchParen') == 2
-    :execute cmd
-  endif
-enddef
+var is_hlsearch: bool
+const match_paren_enabled: bool = exists(':DoMatchParen') == 2 ? true : false
 
 
 def HideLabels(stargates: dict<any>)
@@ -39,9 +34,19 @@ def Greetings()
   if is_visual
     :execute "normal! \<C-c>"
   endif
-  :nohlsearch
+
   [g:stargate_near, g:stargate_distant] = ReachableOrbits()
-  ToggleMatchParen('NoMatchParen')
+
+  is_hlsearch = false
+  if !!v:hlsearch
+    is_hlsearch = true
+    setwinvar(0, '&hlsearch', 0)
+  endif
+
+  if match_paren_enabled
+    :silent! call matchdelete(3)
+  endif
+
   ShowShip()
   Focus()
   StandardMessage(g:stargate_name .. ', choose a destination.')
@@ -56,7 +61,14 @@ def Goodbye()
   Saturate()
   Unfocus()
   HideShip()
-  ToggleMatchParen('DoMatchParen')
+
+  # rehighlight matched paren
+  :doautocmd CursorMoved
+
+  if is_hlsearch
+    setwinvar(0, '&hlsearch', 1)
+  endif
+
   if is_visual
     :execute 'normal! ' .. start_mode .. '`<o'
   endif
