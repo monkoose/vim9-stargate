@@ -1,12 +1,7 @@
 vim9script
 
-import { StandardMessage, ErrorMessage, Error, BlankMessage } from './messages.vim'
-import { SafeGetChar,
-         ReachableOrbits,
-         Focus,
-         Unfocus,
-         ShowShip,
-         HideShip } from './workstation.vim'
+import './messages.vim' as msg
+import './workstation.vim' as ws
 
 const labels = [' ', 'f', 'j', 'd', 'l', 's', 'h', 'g', 'a', 'i', 'e', 'o', 'c', 'u']
 const galaxy_labels = expand('<sfile>:p:h:h') .. '/galaxy_labels'
@@ -67,7 +62,7 @@ def LabelsError(gal: dict<any>)
     for galaxy in galaxies
       popup_setoptions(galaxy.popupid, { highlight: highlight })
     endfor
-    ErrorMessage("Our ship can't reach that galaxy, " .. g:stargate_name)
+    msg.ErrorMessage("Our ship can't reach that galaxy, " .. g:stargate_name)
   enddef
 
   timer_start(5, (t) => Recolor('StargateErrorLabels'))
@@ -80,7 +75,7 @@ def InputLoop(galaxies: dict<dict<number>>, independent: bool): number
   var nr: number
   var err = false
   while true
-    [nr, err] = SafeGetChar()
+    [nr, err] = ws.SafeGetChar()
 
     if err || nr == 27
       return 0
@@ -94,14 +89,14 @@ def InputLoop(galaxies: dict<dict<number>>, independent: bool): number
     endif
 
     if !independent
-      Unfocus()
-      HideShip()
+      ws.Unfocus()
+      ws.HideShip()
     endif
     win_gotoid(destination[char].winid)
     if !independent
-      [g:stargate_near, g:stargate_distant] = ReachableOrbits()
-      ShowShip()
-      Focus()
+      [g:stargate_near, g:stargate_distant] = ws.ReachableOrbits()
+      ws.ShowShip()
+      ws.Focus()
     endif
     break
   endwhile
@@ -111,7 +106,7 @@ enddef
 
 export def ChangeGalaxy(independent: bool): number
   if !filereadable(galaxy_labels)
-    ErrorMessage("Internal error, can't display galaxies.")
+    msg.ErrorMessage("Internal error, can't display galaxies.")
     return 0
   endif
 
@@ -121,9 +116,9 @@ export def ChangeGalaxy(independent: bool): number
     # when starts with stargate#galaxy() call we need to set g variables
     # to highlight that range on error
     if independent
-      [g:stargate_near, g:stargate_distant] = ReachableOrbits()
+      [g:stargate_near, g:stargate_distant] = ws.ReachableOrbits()
     endif
-    Error(g:stargate_name .. ", your species can't outsmart me.")
+    msg.Error(g:stargate_name .. ", your species can't outsmart me.")
     return 1
   endif
 
@@ -136,7 +131,7 @@ export def ChangeGalaxy(independent: bool): number
   var result: number
 
   try
-    StandardMessage('Choose a galaxy for the hyperjump, ' .. g:stargate_name .. '.')
+    msg.StandardMessage('Choose a galaxy for the hyperjump, ' .. g:stargate_name .. '.')
     result = InputLoop(galaxies, independent)
   catch
     :echom v:exception
@@ -147,9 +142,9 @@ export def ChangeGalaxy(independent: bool): number
   endtry
 
   if !independent && result
-    StandardMessage("Now choose a destination.")
+    msg.StandardMessage("Now choose a destination.")
   else
-    BlankMessage()
+    msg.BlankMessage()
   endif
 
   return result

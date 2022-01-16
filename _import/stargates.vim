@@ -1,13 +1,7 @@
 vim9script
 
-import { InfoMessage } from "./messages.vim"
-import {
-  LabelLists,
-  OrbitalArc,
-  TransformPattern,
-  CreatePopups,
-  OrbitsWithoutBlackmatter
-  } from "./workstation.vim"
+import './messages.vim' as msg
+import './workstation.vim' as ws
 
 
 def Desaturate()
@@ -16,7 +10,7 @@ enddef
 
 
 def Designations(length: number): list<string>
-  const ds = LabelLists(g:stargate_chars, length)
+  const ds = ws.LabelLists(g:stargate_chars, length)
 
   # remove unwanted labels from start and end of the label list
   var slice = ds.labels[ds.start_row : ds.end_row]
@@ -56,7 +50,7 @@ def CollectStars(orbits: list<number>, cur_loc: list<number>, pat: string): list
   var stars = []
   for orbit in orbits
     if strdisplaywidth(getline(orbit)) > 5000
-      InfoMessage("stargate: some visible line is longer than 5000 characters. It can be slow, so plugin disabled.")
+      msg.InfoMessage("stargate: some visible line is longer than 5000 characters. It can be slow, so plugin disabled.")
       return []
     endif
     var orbital_stars = OrbitalStars(pat, 'Wnc', orbit)
@@ -77,7 +71,7 @@ enddef
 def GalaxyStars(pattern: string): list<list<number>>
   const view = winsaveview()
 
-  const arc = OrbitalArc()
+  const arc = ws.OrbitalArc()
   var degrees = {first: '', last: ''}
   if !&wrap
     degrees.first = '\%>' .. (arc.first - 1) .. 'v'
@@ -86,7 +80,7 @@ def GalaxyStars(pattern: string): list<list<number>>
 
   const pat = degrees.first .. degrees.last .. pattern
   const cur_loc = [view.lnum, view.col + 1]
-  const stars = OrbitsWithoutBlackmatter(g:stargate_near, g:stargate_distant)
+  const stars = ws.OrbitsWithoutBlackmatter(g:stargate_near, g:stargate_distant)
                   ->CollectStars(cur_loc, pat)
 
   winrestview(view)
@@ -116,7 +110,7 @@ def ShowStargates(destinations: list<list<number>>): dict<any>
     for id in values(g:stargate_popups)
       popup_close(id)
     endfor
-    CreatePopups()
+    ws.CreatePopups()
   endif
 
   const galaxy_distant_orbit = win_screenpos(0)[0] - 1 + winheight(0)
@@ -143,7 +137,7 @@ enddef
 
 
 export def GetDestinations(pattern: string): dict<any>
-  const destinations = pattern->TransformPattern()->GalaxyStars()
+  const destinations = GalaxyStars(ws.TransformPattern(pattern))
   const length = len(destinations)
 
   var stargates: dict<any>
@@ -152,7 +146,7 @@ export def GetDestinations(pattern: string): dict<any>
   elseif length == 1
     stargates = {jump: {orbit: destinations[0][0], degree: destinations[0][1]}}
   elseif length > g:stargate_limit
-    InfoMessage("stargate: too much popups to show - " .. length)
+    msg.InfoMessage("stargate: too much popups to show - " .. length)
     stargates = {}
   else
     Desaturate()

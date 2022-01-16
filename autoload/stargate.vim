@@ -1,8 +1,8 @@
 vim9script
 
-import { CreatePopups } from '../_import/workstation.vim'
-import { OkVIM } from '../_import/vim9000.vim'
-import { ChangeGalaxy } from '../_import/galaxies.vim'
+import '../_import/workstation.vim' as ws
+import '../_import/vim9000.vim' as vim
+import '../_import/galaxies.vim'
 
 g:stargate_ignorecase = get(g:, 'stargate_ignorecase', true)
 g:stargate_limit = get(g:, 'stargate_limit', 300)
@@ -48,12 +48,12 @@ if empty(prop_type_get('sg_ship'))
 endif
 
 # Precreate hidden popup windows for stargates hints
-CreatePopups()
+ws.CreatePopups()
 
 def stargate#ok_vim(mode: any)
-  OkVIM(mode)
+  vim.OkVIM(mode)
 enddef
 
 def stargate#galaxy()
-  ChangeGalaxy(true)
+  galaxies.ChangeGalaxy(true)
 enddef

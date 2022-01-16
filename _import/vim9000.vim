@@ -1,14 +1,9 @@
 vim9script
 
-import { GetDestinations } from './stargates.vim'
-import { ChangeGalaxy } from './galaxies.vim'
-import { StandardMessage, Error, BlankMessage, InfoMessage } from './messages.vim'
-import { SafeGetChar,
-         ReachableOrbits,
-         Focus,
-         Unfocus,
-         ShowShip,
-         HideShip } from './workstation.vim'
+import './stargates.vim' as sg
+import './galaxies.vim'
+import './messages.vim' as msg
+import './workstation.vim' as ws
 
 var start_mode: string
 var is_visual: bool
@@ -35,7 +30,7 @@ def Greetings()
     :execute "normal! \<C-c>"
   endif
 
-  [g:stargate_near, g:stargate_distant] = ReachableOrbits()
+  [g:stargate_near, g:stargate_distant] = ws.ReachableOrbits()
 
   is_hlsearch = false
   if !!v:hlsearch
@@ -47,9 +42,9 @@ def Greetings()
     :silent! call matchdelete(3)
   endif
 
-  ShowShip()
-  Focus()
-  StandardMessage(g:stargate_name .. ', choose a destination.')
+  ws.ShowShip()
+  ws.Focus()
+  msg.StandardMessage(g:stargate_name .. ', choose a destination.')
 enddef
 
 
@@ -59,8 +54,8 @@ def Goodbye()
   endfor
   prop_remove({ type: 'sg_error' }, g:stargate_near, g:stargate_distant)
   Saturate()
-  Unfocus()
-  HideShip()
+  ws.Unfocus()
+  ws.HideShip()
 
   # rehighlight matched paren
   :doautocmd CursorMoved
@@ -84,7 +79,7 @@ export def OkVIM(mode: any)
       destinations = ChooseDestinations(mode)
     else
       g:stargate_mode = 0
-      destinations = GetDestinations(mode)
+      destinations = sg.GetDestinations(mode)
     endif
     if !empty(destinations)
       UseStargate(destinations)
@@ -113,13 +108,13 @@ def UseStargate(destinations: dict<any>)
   var nr: number
   var err: bool
   var stargates = copy(destinations)
-  StandardMessage('Select a stargate for a jump.')
+  msg.StandardMessage('Select a stargate for a jump.')
   while true
     var filtered = {}
-    [nr, err] = SafeGetChar()
+    [nr, err] = ws.SafeGetChar()
 
     if err || nr == 27
-      BlankMessage()
+      msg.BlankMessage()
       return
     endif
 
@@ -132,16 +127,16 @@ def UseStargate(destinations: dict<any>)
     endfor
 
     if empty(filtered)
-      Error('Wrong stargate, ' .. g:stargate_name .. '. Choose another one.')
+      msg.Error('Wrong stargate, ' .. g:stargate_name .. '. Choose another one.')
     elseif len(filtered) == 1
-      BlankMessage()
+      msg.BlankMessage()
       cursor(filtered[''].orbit, filtered[''].degree)
       return
     else
       HideLabels(stargates)
       ShowFiltered(filtered)
       stargates = copy(filtered)
-      StandardMessage('Select a stargate for a jump.')
+      msg.StandardMessage('Select a stargate for a jump.')
     endif
   endwhile
 enddef
@@ -155,11 +150,11 @@ def ChooseDestinations(mode: number): dict<any>
   while true
     var nrs = []
     for _ in range(mode)
-      [nr, err] = SafeGetChar()
+      [nr, err] = ws.SafeGetChar()
 
       # 27 is <Esc>
       if err || nr == 27
-        BlankMessage()
+        msg.BlankMessage()
         return {}
       endif
 
@@ -176,27 +171,27 @@ def ChooseDestinations(mode: number): dict<any>
       to_galaxy = false
       # do not change window if in visual or operator-pending modes
       if is_visual || state()[0] == 'o'
-        Error('It is impossible to do now, ' .. g:stargate_name .. '.')
-      elseif !ChangeGalaxy(false)
+        msg.Error('It is impossible to do now, ' .. g:stargate_name .. '.')
+      elseif !galaxies.ChangeGalaxy(false)
         return {}
       endif
       # if current window after the jump is in terminal or insert modes - quit stargate
       if !match(mode(), '[ti]')
-        InfoMessage("stargate: can't work in terminal or insert mode.")
+        msg.InfoMessage("stargate: can't work in terminal or insert mode.")
         return {}
       endif
       continue
     endif
 
-    destinations = GetDestinations(nrs
+    destinations = sg.GetDestinations(nrs
                                     ->mapnew((_, v) => nr2char(v))
                                     ->join(''))
-    # destinations = GetDestinations(nr2char(nr))
+    # destinations = sg.GetDestinations(nr2char(nr))
     if empty(destinations)
-      Error("We can't reach there, " .. g:stargate_name .. '.')
+      msg.Error("We can't reach there, " .. g:stargate_name .. '.')
       continue
     elseif len(destinations) == 1
-      BlankMessage()
+      msg.BlankMessage()
       cursor(destinations.jump.orbit, destinations.jump.degree)
       return {}
     end
