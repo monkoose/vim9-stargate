@@ -82,7 +82,12 @@ export def OkVIM(mode: any)
       destinations = sg.GetDestinations(mode)
     endif
     if !empty(destinations)
-      UseStargate(destinations)
+      if len(destinations) == 1
+        msg.BlankMessage()
+        cursor(destinations.jump.orbit, destinations.jump.degree)
+      else
+        UseStargate(destinations)
+      endif
     endif
   catch
     :echom v:exception
@@ -190,10 +195,6 @@ def ChooseDestinations(mode: number): dict<any>
     if empty(destinations)
       msg.Error("We can't reach there, " .. g:stargate_name .. '.')
       continue
-    elseif len(destinations) == 1
-      msg.BlankMessage()
-      cursor(destinations.jump.orbit, destinations.jump.degree)
-      return {}
     end
     break
   endwhile
