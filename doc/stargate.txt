@@ -22,16 +22,16 @@ USAGE                                                         *stargate-usage*
 
 Stargate provides two public functions that you can map to any key to use it.
 
-stargate#ok_vim({mode})                                    *stargate#ok_vim()*
+stargate#OKvim({mode})                                      *stargate#OKvim()*
 
         {mode} is a unsigned number or a string. When it is number stargate
         waits for the user to type as much consecutive characters and then
         search for this characters in the current window.
 >
         " For 1 character to search before showing hints
-        noremap <leader>f <Cmd>call stargate#ok_vim(1)<CR>
+        noremap <leader>f <Cmd>call stargate#OKvim(1)<CR>
         " For 2 consecutive characters to search
-        noremap <leader>F <Cmd>call stargate#ok_vim(2)<CR>
+        noremap <leader>F <Cmd>call stargate#OKvim(2)<CR>
 <
         Instead of 1 or 2 you can use any higher nubmer, but it isn't that
         much practical and it is easier to use |/| and |?| for such search.
@@ -40,13 +40,13 @@ stargate#ok_vim({mode})                                    *stargate#ok_vim()*
         the current window.
 >
         " for the start of a word
-        noremap <leader>w <Cmd>call stargate#ok_vim("\<")
+        noremap <leader>w <Cmd>call stargate#OKvim("\<")
         " for the start of a line if it is visible
-        noremap <leader>l <Cmd>call stargate#ok_vim("\_^")
+        noremap <leader>l <Cmd>call stargate#OKvim("\_^")
         " for the end of a word
-        noremap <leader>e <Cmd>call stargate#ok_vim("\>")
+        noremap <leader>e <Cmd>call stargate#OKvim("\>")
         " for any bracket, parentheses or curly bracket
-        noremap <leader>[ <Cmd>call stargate#ok_vim("\[(){}[\\]]")<CR>
+        noremap <leader>[ <Cmd>call stargate#OKvim("\[(){}[\\]]")<CR>
 <
         As you can see from this examples possible jump locations are limited
         only by your knowledge of vim |regexp|.
@@ -58,21 +58,27 @@ stargate#ok_vim({mode})                                    *stargate#ok_vim()*
         required, without it the plugin in visual mode will behave not as
         expected.
 
-stargate#galaxy()                                          *stargate#galaxy()*
+stargate#Galaxy()                                          *stargate#Galaxy()*
 
         Used to invoke window switching mode of the stargate plugin outside of
         the main function.
 >
-        nnoremap <leader>w <Cmd>call stargate#galaxy()<CR>
+        nnoremap <leader>w <Cmd>call stargate#Galaxy()<CR>
 <
         Notice that for this function |nnoremap| is used  this time because
         there is no sense to change window in visual or operator-pending
         modes.
 
-To change current window when |stargate#ok_vim()| was called you can press
-`<C-w>` so |stargate#galaxy()| will be invoked.
+To change current window when |stargate#OKvim()| was called you can press
+`<C-w>` so |stargate#Galaxy()| will be invoked.
 
 To exit stargate at any moment hit `<Esc>` or `<C-c>`.
+
+                                                              *stargate-error*
+If you got error message `E117: Unknown function...` when trying to jump to a
+hint, then some changes to your plugin mappings are required. It happens
+because autoload Vim9 functions now must be capitalized. Please read
+|stargate-usage| and make required adjustments (functions renames).
 
 ==============================================================================
 CONFIGURATION                                         *stargate-configuration*

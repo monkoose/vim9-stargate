@@ -27,9 +27,9 @@ doesn't add anything to your vim startup time. So to use this plugin, you just
 need to create a mapping and call stargate function, like so
 ```vim
 " For 1 character to search before showing hints
-noremap <leader>f <Cmd>call stargate#ok_vim(1)<CR>
+noremap <leader>f <Cmd>call stargate#OKvim(1)<CR>
 " For 2 consecutive characters to search
-noremap <leader>F <Cmd>call stargate#ok_vim(2)<CR>
+noremap <leader>F <Cmd>call stargate#OKvim(2)<CR>
 
 " Instead of 1 or 2 you can use any higher number, but it isn't much practical
 " and it is easier to use `/` or `?` for that
@@ -45,7 +45,7 @@ mode) just press `<C-w>`, so then you can choose window label to swap to it
 this feature outside of stargate plugin itself you can map provided function
 to some convenient key
 ```vim
-nnoremap <leader>w <Cmd>call stargate#galaxy()<CR>
+nnoremap <leader>w <Cmd>call stargate#Galaxy()<CR>
 ```
 And here we actually use `nnoremap` this time , because it makes no sense to
 swap to another window in visual or operator-pending modes.
@@ -53,17 +53,17 @@ swap to another window in visual or operator-pending modes.
 To exit stargate at any moment press `<Esc>` or `<C-c>`.
 
 If you want to use another jump locations like easymotion jump to start of a
-word, or start of a line etc. You can use `stargate#ok_vim()` with a string as
+word, or start of a line etc. You can use `stargate#OKvim()` with a string as
 its only argument. This string is just some vim regexp.
 ```vim
 " for the start of a word
-noremap <leader>w <Cmd>call stargate#ok_vim("\<")
+noremap <leader>w <Cmd>call stargate#OKvim("\<")
 " for the start of a line if it is visible
-noremap <leader>l <Cmd>call stargate#ok_vim("\_^")
+noremap <leader>l <Cmd>call stargate#OKvim("\_^")
 " for the end of a word
-noremap <leader>e <Cmd>call stargate#ok_vim("\>")
+noremap <leader>e <Cmd>call stargate#OKvim("\>")
 " for any bracket, parentheses or curly bracket
-noremap <leader>[ <Cmd>call stargate#ok_vim("\[(){}[\\]]")<CR>
+noremap <leader>[ <Cmd>call stargate#OKvim("\[(){}[\\]]")<CR>
 ```
 As you can see possible jump locations are limited only by your knowledge of
 vim regexp.

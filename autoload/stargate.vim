@@ -50,10 +50,23 @@ endif
 # Precreate hidden popup windows for stargates hints
 ws.CreatePopups()
 
-def stargate#ok_vim(mode: any)
-  vim.OkVIM(mode)
+export def OKvim(mode: any)
+    vim.OkVIM(mode)
 enddef
 
-def stargate#galaxy()
-  galaxies.ChangeGalaxy(true)
+export def Galaxy()
+    galaxies.ChangeGalaxy(true)
 enddef
+
+# Remove this after some time
+export def ErrorMsg()
+    echohl WarningMsg
+    echo "Since vim9 doesn't have stable API yet changes to config are required"
+    echo "Read "
+    echohl String
+    echon ":h stargate-error"
+    echohl WarningMsg
+    echon " to learn how to fix this issue"
+    echohl None
+enddef
+autocmd FuncUndefined stargate#ok_vim,stargate#galaxy call stargate#ErrorMsg()

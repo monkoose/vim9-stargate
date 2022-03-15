@@ -113,7 +113,7 @@ export def ChangeGalaxy(independent: bool): number
   const tabnr = tabpagenr()
   var galaxies_info = getwininfo()->filter((_, v) => v.tabnr == tabnr)
   if len(galaxies_info) == 1
-    # when starts with stargate#galaxy() call we need to set g variables
+    # when starts with stargate#Galaxy() call we need to set g variables
     # to highlight that range on error
     if independent
       [g:stargate_near, g:stargate_distant] = ws.ReachableOrbits()
