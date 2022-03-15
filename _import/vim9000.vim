@@ -195,7 +195,7 @@ def ChooseDestinations(mode: number): dict<any>
     if empty(destinations)
       msg.Error("We can't reach there, " .. g:stargate_name .. '.')
       continue
-    end
+    endif
     break
   endwhile
 
