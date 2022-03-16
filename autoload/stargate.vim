@@ -59,7 +59,7 @@ export def Galaxy()
 enddef
 
 # Remove this after some time
-export def ErrorMsg()
+export def ErrorMsg(function_name: string)
     echohl WarningMsg
     echo "Since vim9 doesn't have stable API yet changes to config are required"
     echo "Read "
@@ -68,5 +68,17 @@ export def ErrorMsg()
     echohl WarningMsg
     echon " to learn how to fix this issue"
     echohl None
+
+    echoerr "E117: Unknown function: " .. function_name
 enddef
-autocmd FuncUndefined stargate#ok_vim,stargate#galaxy call stargate#ErrorMsg()
+
+const legacy_definitions =<< trim VIM
+    function stargate#ok_vim(mode) abort
+        call stargate#ErrorMsg("stargate#ok_vim")
+    endfunction
+
+    function stargate#galaxy() abort
+        call stargate#ErrorMsg("stargate#galaxy")
+    endfunction
+VIM
+legacy execute join(s:legacy_definitions, "\n")
