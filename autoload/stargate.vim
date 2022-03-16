@@ -59,9 +59,11 @@ export def Galaxy()
 enddef
 
 # Remove this after some time
-export def ErrorMsg()
+def ErrorMsg()
+    echohl ErrorMsg
+    echo "vim9-stargate Error"
     echohl WarningMsg
-    echo "Since vim9 doesn't have stable API yet changes to config are required"
+    echo "vim9 have changed its API recently, so changes to config are required too"
     echo "Read "
     echohl String
     echon ":h stargate-error"
@@ -69,4 +71,11 @@ export def ErrorMsg()
     echon " to learn how to fix this issue"
     echohl None
 enddef
-autocmd FuncUndefined stargate#ok_vim,stargate#galaxy call stargate#ErrorMsg()
+
+legacy function stargate#ok_vim(n)
+    call s:ErrorMsg()
+endfunction
+
+legacy function stargate#galaxy()
+    call s:ErrorMsg()
+endfunction

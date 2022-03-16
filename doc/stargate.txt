@@ -75,10 +75,13 @@ To change current window when |stargate#OKvim()| was called you can press
 To exit stargate at any moment hit `<Esc>` or `<C-c>`.
 
                                                               *stargate-error*
-If you got error message `E117: Unknown function...` when trying to jump to a
-hint, then some changes to your plugin mappings are required. It happens
-because autoload Vim9 functions now must be capitalized. Please read
-|stargate-usage| and make required adjustments (functions renames).
+Some changes to your plugin mappings are required. It happens because autoload
+Vim9 functions now must be capitalized. Please read |stargate-usage| and
+appropriately rename required functions:
+>
+        stargate#ok_vim() -> stargate#OKvim()
+        stargate#galaxy() -> stargate#Galaxy()
+<
 
 ==============================================================================
 CONFIGURATION                                         *stargate-configuration*
