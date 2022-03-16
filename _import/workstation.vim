@@ -87,7 +87,7 @@ export def TransformPattern(pattern: string): string
   endif
 
   var pat = pattern
-  const prefix = '\M' .. (g:stargate_ignorecase ? '\c' : '\C')
+  const prefix = '\V' .. (g:stargate_ignorecase ? '\c' : '\C')
   if !empty(g:stargate_keymaps)
     pat = ProcessKeymap(pat)
   endif
