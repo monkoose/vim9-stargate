@@ -27,7 +27,7 @@ def Greetings()
   start_mode = mode()
   is_visual = start_mode != 'n'
   if is_visual
-    :execute "normal! \<C-c>"
+    execute "normal! \<C-c>"
   endif
 
   [g:stargate_near, g:stargate_distant] = ws.ReachableOrbits()
@@ -39,7 +39,7 @@ def Greetings()
   endif
 
   if match_paren_enabled
-    :silent! call matchdelete(3)
+    silent! call matchdelete(3)
   endif
 
   ws.ShowShip()
@@ -58,14 +58,14 @@ def Goodbye()
   ws.HideShip()
 
   # rehighlight matched paren
-  :doautocmd CursorMoved
+  doautocmd CursorMoved
 
   if is_hlsearch
     setwinvar(0, '&hlsearch', 1)
   endif
 
   if is_visual
-    :execute 'normal! ' .. start_mode .. '`<o'
+    execute 'normal! ' .. start_mode .. '`<o'
   endif
 enddef
 
@@ -90,7 +90,7 @@ export def OkVIM(mode: any)
       endif
     endif
   catch
-    :echom v:exception
+    echom v:exception
   finally
     Goodbye()
   endtry

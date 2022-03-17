@@ -134,7 +134,7 @@ export def ChangeGalaxy(independent: bool): number
     msg.StandardMessage('Choose a galaxy for the hyperjump, ' .. g:stargate_name .. '.')
     result = InputLoop(galaxies, independent)
   catch
-    :echom v:exception
+    echom v:exception
   finally
     for galaxy in values(galaxies)
       popup_close(galaxy.popupid)

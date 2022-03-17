@@ -11,17 +11,17 @@ g:stargate_name = get(g:, 'stargate_name', 'Human')
 g:stargate_keymaps = get(g:, 'stargate_keymaps', {})
 
 def Highlight()
-  :highlight default StargateFocus guifg=#958c6a
-  :highlight default StargateDesaturate guifg=#49423f
-  :highlight default StargateError guifg=#d35b4b
-  :highlight default StargateLabels guifg=#caa247 guibg=#171e2c
-  :highlight default StargateErrorLabels guifg=#caa247 guibg=#551414
-  :highlight default StargateMain guifg=#f2119c gui=bold cterm=bold
-  :highlight default StargateSecondary guifg=#11eb9c gui=bold cterm=bold
-  :highlight default StargateShip guifg=#111111 guibg=#caa247
-  :highlight default StargateVIM9000 guifg=#111111 guibg=#b2809f gui=bold cterm=bold
-  :highlight default StargateMessage guifg=#a5b844
-  :highlight default StargateErrorMessage guifg=#e36659
+  highlight default StargateFocus guifg=#958c6a
+  highlight default StargateDesaturate guifg=#49423f
+  highlight default StargateError guifg=#d35b4b
+  highlight default StargateLabels guifg=#caa247 guibg=#171e2c
+  highlight default StargateErrorLabels guifg=#caa247 guibg=#551414
+  highlight default StargateMain guifg=#f2119c gui=bold cterm=bold
+  highlight default StargateSecondary guifg=#11eb9c gui=bold cterm=bold
+  highlight default StargateShip guifg=#111111 guibg=#caa247
+  highlight default StargateVIM9000 guifg=#111111 guibg=#b2809f gui=bold cterm=bold
+  highlight default StargateMessage guifg=#a5b844
+  highlight default StargateErrorMessage guifg=#e36659
 enddef
 
 augroup ReapplyHighlight

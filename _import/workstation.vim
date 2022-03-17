@@ -7,7 +7,7 @@ export def DisplayLeftEdge(): number
   const view = winsaveview()
   const ve = &virtualedit
   &virtualedit = 'all'
-  :normal! 0
+  normal! 0
   const degree = wincol()
   &virtualedit = ve
   winrestview(view)

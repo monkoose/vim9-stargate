@@ -2,12 +2,12 @@ vim9script
 
 
 def Message(text: string, color: string)
-  :redraw
-  :execute 'echohl StargateVIM9000'
-  :echo ' VIM9000 '
-  :execute 'echohl ' .. color
-  :echon ' ' .. text .. ' '
-  :echohl None
+  redraw
+  execute 'echohl StargateVIM9000'
+  echo ' VIM9000 '
+  execute 'echohl ' .. color
+  echon ' ' .. text .. ' '
+  echohl None
 enddef
 
 
@@ -39,12 +39,12 @@ enddef
 
 
 export def InfoMessage(message: string)
-  :redraw
-  :echoerr message
+  redraw
+  echoerr message
 enddef
 
 
 export def BlankMessage()
-  :redraw
-  :echo ''
+  redraw
+  echo ''
 enddef
