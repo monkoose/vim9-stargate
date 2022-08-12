@@ -47,7 +47,7 @@ if empty(prop_type_get('sg_ship'))
     prop_type_add('sg_ship', { highlight: 'StargateShip', combine: false, priority: 1015})
 endif
 
-# Precreate hidden popup windows for stargates hints
+# Initialize hidden popup windows for stargates hints
 ws.CreatePopups()
 
 export def OKvim(mode: any)
@@ -57,25 +57,3 @@ enddef
 export def Galaxy()
     galaxies.ChangeGalaxy(true)
 enddef
-
-# Remove this after some time
-def ErrorMsg()
-    echohl ErrorMsg
-    echo "vim9-stargate Error"
-    echohl WarningMsg
-    echo "vim9 have changed its API recently, so changes to config are required too"
-    echo "Read "
-    echohl String
-    echon ":h stargate-error"
-    echohl WarningMsg
-    echon " to learn how to fix this issue"
-    echohl None
-enddef
-
-legacy function stargate#ok_vim(n)
-    call s:ErrorMsg()
-endfunction
-
-legacy function stargate#galaxy()
-    call s:ErrorMsg()
-endfunction
