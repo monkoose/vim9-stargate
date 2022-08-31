@@ -120,7 +120,7 @@ def UseStargate(destinations: dict<any>)
         var filtered = {}
         const [nr: number, err: bool] = ws.SafeGetChar()
 
-        if err || nr == 27
+        if err || nr == 27  # 27 is <Esc>
             msg.BlankMessage()
             return
         endif
@@ -157,14 +157,12 @@ def ChooseDestinations(mode: number): dict<any>
         for _ in range(mode)
             const [nr: number, err: bool] = ws.SafeGetChar()
 
-            # 27 is <Esc>
-            if err || nr == 27
+            if err || nr == 27  # 27 is <Esc>
                 msg.BlankMessage()
                 return {}
             endif
 
-            # 23 is <C-w>
-            if nr == 23
+            if nr == 23  # 23 is <C-w>
                 to_galaxy = true
                 break
             endif
