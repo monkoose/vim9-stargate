@@ -24,22 +24,23 @@ def GalaxyLabel(buf_nr: number, line_nr: number, wininfo: dict<any>): number
     const height = 4
     const row = wininfo.winrow + wininfo.height / 2 - height / 2
     const column = wininfo.wincol + wininfo.width / 2 - width / 2
-    return popup_create( buf_nr,
-                         { line: row,
-                           col: column,
-                           flip: false,
-                           minheight: height,
-                           maxheight: height,
-                           minwidth: width,
-                           maxwidth: width,
-                           firstline: line_nr,
-                           wrap: false,
-                           drag: false,
-                           resize: false,
-                           highlight: 'StargateLabels',
-                           scrollbar: false,
-                           zindex: 10000,
-                           moved: 'any' })
+    return popup_create( buf_nr, {
+        line: row,
+        col: column,
+        flip: false,
+        minheight: height,
+        maxheight: height,
+        minwidth: width,
+        maxwidth: width,
+        firstline: line_nr,
+        wrap: false,
+        drag: false,
+        resize: false,
+        highlight: 'StargateLabels',
+        scrollbar: false,
+        zindex: 10000,
+        moved: 'any'
+    })
 enddef
 
 

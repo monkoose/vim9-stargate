@@ -32,7 +32,8 @@ export def Error(message: string)
     prop_add(g:stargate_near, 1, {
         end_lnum: g:stargate_distant,
         end_col: ws.max_col,
-        type: 'sg_error' })
+        type: 'sg_error'
+    })
     ErrorMessage(message)
     timer_start(150, RemoveError)
 enddef

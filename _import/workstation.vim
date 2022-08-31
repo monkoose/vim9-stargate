@@ -129,12 +129,14 @@ export def LabelLists(chars: list<string>, length: number): dict<any>
     const end_row = labels_len - 1
     const end_col = chars_len - (labels_len * chars_len - length - index + 1)
 
-    return { labels: labels,
-             len: chars_len,
-             start_row: i1,
-             start_col: i2,
-             end_row: end_row,
-             end_col: end_col }
+    return {
+        labels: labels,
+        len: chars_len,
+        start_row: i1,
+        start_col: i2,
+        end_row: end_row,
+        end_col: end_col
+    }
 enddef
 
 
