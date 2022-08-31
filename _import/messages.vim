@@ -38,7 +38,9 @@ enddef
 
 export def InfoMessage(message: string)
     redraw
-    echoerr message
+    echohl WarningMsg
+    echo message
+    echohl None
 enddef
 
 
