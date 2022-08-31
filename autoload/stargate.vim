@@ -26,7 +26,7 @@ enddef
 
 augroup ReapplyHighlight
     autocmd!
-    autocmd ColorScheme * call Highlight()
+    autocmd ColorScheme * Highlight()
 augroup END
 
 Highlight()
@@ -36,7 +36,8 @@ if empty(prop_type_get('sg_focus'))
 endif
 
 if empty(prop_type_get('sg_desaturate'))
-    prop_type_add('sg_desaturate', { highlight: 'StargateDesaturate', combine: false, priority: 1005})
+    prop_type_add('sg_desaturate', {
+        highlight: 'StargateDesaturate', combine: false, priority: 1005})
 endif
 
 if empty(prop_type_get('sg_error'))
