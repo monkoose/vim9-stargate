@@ -57,3 +57,5 @@ enddef
 export def Galaxy()
     galaxies.ChangeGalaxy(true)
 enddef
+
+# vim: sw=4

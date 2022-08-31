@@ -156,3 +156,5 @@ export def GetDestinations(pattern: string): dict<any>
 
     return stargates
 enddef
+
+# vim: sw=4

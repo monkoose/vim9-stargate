@@ -149,3 +149,5 @@ export def ChangeGalaxy(independent: bool): number
 enddef
 
 defcompile
+
+# vim: sw=4
