@@ -64,7 +64,7 @@ def Greetings()
     [g:stargate_near, g:stargate_distant] = ws.ReachableOrbits()
 
     is_hlsearch = false
-    if !!v:hlsearch
+    if v:hlsearch
         is_hlsearch = true
         setwinvar(0, '&hlsearch', 0)
     endif
@@ -127,7 +127,7 @@ def UseStargate(destinations: dict<any>)
 
         const char = nr2char(nr)
         for [label, stargate] in items(stargates)
-            if !match(label, char)
+            if match(label, char) == 0
                 const new_label = strcharpart(label, 1)
                 filtered[new_label] = stargate
             endif
@@ -178,7 +178,7 @@ def ChooseDestinations(mode: number): dict<any>
                 return {}
             endif
             # if current window after the jump is in terminal or insert modes - quit stargate
-            if !match(mode(), '[ti]')
+            if match(mode(), '[ti]') == 0
                 msg.InfoMessage("stargate: can't work in terminal or insert mode.")
                 return {}
             endif

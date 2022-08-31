@@ -70,10 +70,8 @@ enddef
 
 # Switch to the labeled window and return 1, on error or <Esc> returns 0
 def InputLoop(galaxies: dict<dict<number>>, independent: bool): number
-    var nr: number
-    var err = false
     while true
-        [nr, err] = ws.SafeGetChar()
+        const [nr: number, err: bool] = ws.SafeGetChar()
 
         if err || nr == 27
             return 0

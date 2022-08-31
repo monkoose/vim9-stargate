@@ -23,7 +23,7 @@ def Designations(length: number): list<string>
     for i in range(ds.len)
         for j in range(len(slice))
             const label = slice[j]->get(i, '')
-            if !!label
+            if !empty(label)
                 dss->add(label)
             endif
         endfor
