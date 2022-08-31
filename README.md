@@ -57,11 +57,14 @@ word, or start of a line etc. You can use `stargate#OKvim()` with a string as
 its only argument. This string is just some vim regexp.
 ```vim
 " for the start of a word
-noremap <leader>w <Cmd>call stargate#OKvim("\<")
-" for the start of a line if it is visible
-noremap <leader>l <Cmd>call stargate#OKvim("\_^")
+noremap <leader>w <Cmd>call stargate#OKvim("\\<")<CR>
 " for the end of a word
-noremap <leader>e <Cmd>call stargate#OKvim("\>")
+noremap <leader>e <Cmd>call stargate#OKvim("\\S\\>")<CR>
+" for the start of a line if it is visible
+noremap <leader>l <Cmd>call stargate#OKvim("\\_^")<CR>
+" for the end of a line if it is visible and non blank
+noremap <leader>$ <Cmd>call stargate#OKvim("\\S$")<CR>
+noremap <leader>o <Cmd>call stargate#OKvim("$")<CR>
 " for any bracket, parentheses or curly bracket
 noremap <leader>[ <Cmd>call stargate#OKvim("\[(){}[\\]]")<CR>
 ```
