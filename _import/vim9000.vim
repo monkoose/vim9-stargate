@@ -11,6 +11,9 @@ var is_hlsearch: bool
 const match_paren_enabled = exists(':DoMatchParen') == 2 ? true : false
 
 
+# `mode` can be positive number or string
+# when it is number search for that much consequitive input chars
+# when `mode` is string it is regex to search for
 export def OkVIM(mode: any)
     try
         Greetings()
@@ -30,8 +33,9 @@ export def OkVIM(mode: any)
                 UseStargate(destinations)
             endif
         endif
-    catch
-        echom v:exception
+    catch /.*/
+        redraw
+        execute 'echoerr "' .. v:exception .. '"'
     finally
         Goodbye()
     endtry
@@ -170,8 +174,7 @@ def ChooseDestinations(mode: number): dict<any>
 
         if to_galaxy
             to_galaxy = false
-            # do not change window if in visual or operator-pending modes
-            if in_visual_mode || state()[0] == 'o'
+            if in_visual_mode || ws.InOperatorPendingMode()
                 msg.Error('It is impossible to do now, ' .. g:stargate_name .. '.')
             elseif !galaxies.ChangeGalaxy(false)
                 return {}

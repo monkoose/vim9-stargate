@@ -79,6 +79,11 @@ def ProcessKeymap(pattern: string): string
 enddef
 
 
+# Retruns true in operator-pending mode
+export def InOperatorPendingMode(): bool
+    return state()[0] == 'o'
+enddef
+
 # Returns modified pattern so it can be processed by searchpos()
 export def TransformPattern(pattern: string): string
     if !g:stargate_mode
