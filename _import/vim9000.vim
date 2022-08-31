@@ -26,6 +26,7 @@ export def OkVIM(mode: any)
             destinations = sg.GetDestinations(mode)
         endif
         if !empty(destinations)
+            normal! m'
             if len(destinations) == 1
                 msg.BlankMessage()
                 cursor(destinations.jump.orbit, destinations.jump.degree)
