@@ -6,9 +6,36 @@ import './messages.vim' as msg
 import './workstation.vim' as ws
 
 var start_mode: string
-var is_visual: bool
+var in_visual_mode: bool
 var is_hlsearch: bool
-const match_paren_enabled: bool = exists(':DoMatchParen') == 2 ? true : false
+const match_paren_enabled = exists(':DoMatchParen') == 2 ? true : false
+
+
+export def OkVIM(mode: any)
+    try
+        Greetings()
+        var destinations: dict<any>
+        if type(mode) == v:t_number
+            g:stargate_mode = true
+            destinations = ChooseDestinations(mode)
+        else
+            g:stargate_mode = false
+            destinations = sg.GetDestinations(mode)
+        endif
+        if !empty(destinations)
+            if len(destinations) == 1
+                msg.BlankMessage()
+                cursor(destinations.jump.orbit, destinations.jump.degree)
+            else
+                UseStargate(destinations)
+            endif
+        endif
+    catch
+        echom v:exception
+    finally
+        Goodbye()
+    endtry
+enddef
 
 
 def HideLabels(stargates: dict<any>)
@@ -25,8 +52,8 @@ enddef
 
 def Greetings()
     start_mode = mode()
-    is_visual = start_mode != 'n'
-    if is_visual
+    in_visual_mode = start_mode != 'n'
+    if in_visual_mode
         execute "normal! \<C-c>"
     endif
 
@@ -64,36 +91,9 @@ def Goodbye()
         setwinvar(0, '&hlsearch', 1)
     endif
 
-    if is_visual
+    if in_visual_mode
         execute 'normal! ' .. start_mode .. '`<o'
     endif
-enddef
-
-
-export def OkVIM(mode: any)
-    try
-        Greetings()
-        var destinations: dict<any>
-        if type(mode) == v:t_number
-            g:stargate_mode = mode
-            destinations = ChooseDestinations(mode)
-        else
-            g:stargate_mode = 0
-            destinations = sg.GetDestinations(mode)
-        endif
-        if !empty(destinations)
-            if len(destinations) == 1
-                msg.BlankMessage()
-                cursor(destinations.jump.orbit, destinations.jump.degree)
-            else
-                UseStargate(destinations)
-            endif
-        endif
-    catch
-        echom v:exception
-    finally
-        Goodbye()
-    endtry
 enddef
 
 
@@ -110,13 +110,11 @@ enddef
 
 
 def UseStargate(destinations: dict<any>)
-    var nr: number
-    var err: bool
     var stargates = copy(destinations)
     msg.StandardMessage('Select a stargate for a jump.')
     while true
         var filtered = {}
-        [nr, err] = ws.SafeGetChar()
+        const [nr: number, err: bool] = ws.SafeGetChar()
 
         if err || nr == 27
             msg.BlankMessage()
@@ -148,14 +146,12 @@ enddef
 
 
 def ChooseDestinations(mode: number): dict<any>
-    var nr: number
-    var err: bool
-    var to_galaxy: bool
+    var to_galaxy = false
     var destinations = {}
     while true
         var nrs = []
         for _ in range(mode)
-            [nr, err] = ws.SafeGetChar()
+            const [nr: number, err: bool] = ws.SafeGetChar()
 
             # 27 is <Esc>
             if err || nr == 27
@@ -175,7 +171,7 @@ def ChooseDestinations(mode: number): dict<any>
         if to_galaxy
             to_galaxy = false
             # do not change window if in visual or operator-pending modes
-            if is_visual || state()[0] == 'o'
+            if in_visual_mode || state()[0] == 'o'
                 msg.Error('It is impossible to do now, ' .. g:stargate_name .. '.')
             elseif !galaxies.ChangeGalaxy(false)
                 return {}
@@ -191,7 +187,6 @@ def ChooseDestinations(mode: number): dict<any>
         destinations = sg.GetDestinations(nrs
                                             ->mapnew((_, v) => nr2char(v))
                                             ->join(''))
-        # destinations = sg.GetDestinations(nr2char(nr))
         if empty(destinations)
             msg.Error("We can't reach there, " .. g:stargate_name .. '.')
             continue
@@ -201,3 +196,5 @@ def ChooseDestinations(mode: number): dict<any>
 
     return destinations
 enddef
+
+# vim: sw=4

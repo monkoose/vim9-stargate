@@ -23,17 +23,15 @@ enddef
 
 export def Error(message: string)
     def RemoveError(t: number)
-        prop_remove({ type: 'sg_error' }, g:stargate_near, g:stargate_distant)
-        # this duplicate message is required, so cursor stays in commandline
-        ErrorMessage(message)
+        prop_remove({ type: 'sg_error' }, g:stargate_near, g:stargate_distant + 1)
+        redraw
     enddef
 
-    timer_start(5, (_) => {
-        prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant,
-                                       end_col: 5000,
-                                       type: 'sg_error' })
-        ErrorMessage(message)
-    })
+    prop_add(g:stargate_near, 1, {
+        end_lnum: g:stargate_distant,
+        end_col: 5000,
+        type: 'sg_error' })
+    ErrorMessage(message)
     timer_start(150, RemoveError)
 enddef
 
@@ -48,3 +46,5 @@ export def BlankMessage()
     redraw
     echo ''
 enddef
+
+# vim: sw=4

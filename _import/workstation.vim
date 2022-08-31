@@ -1,5 +1,6 @@
 vim9script
 
+const term_ve = &t_ve
 
 # Returns first window column number after signcolumn
 # Required because there are no easy way to get width of the signcolumn in vim
@@ -178,10 +179,14 @@ enddef
 
 export def ShowShip()
     prop_add(line('.'), col('.'), { type: 'sg_ship' })
+    &t_ve = ''
 enddef
 
 export def HideShip()
     prop_remove({ type: 'sg_ship' }, g:stargate_near, g:stargate_distant)
+    &t_ve = term_ve
 enddef
 
 defcompile
+
+# vim: sw=4
