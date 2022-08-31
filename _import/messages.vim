@@ -1,6 +1,8 @@
 vim9script
 
 
+import './workstation.vim' as ws
+
 def Message(text: string, color: string)
     redraw
     execute 'echohl StargateVIM9000'
@@ -29,7 +31,7 @@ export def Error(message: string)
 
     prop_add(g:stargate_near, 1, {
         end_lnum: g:stargate_distant,
-        end_col: 5000,
+        end_col: ws.max_col,
         type: 'sg_error' })
     ErrorMessage(message)
     timer_start(150, RemoveError)
@@ -39,7 +41,7 @@ enddef
 export def InfoMessage(message: string)
     redraw
     echohl WarningMsg
-    echo message
+    echom message
     echohl None
 enddef
 

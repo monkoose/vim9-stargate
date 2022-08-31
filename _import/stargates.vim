@@ -5,7 +5,8 @@ import './workstation.vim' as ws
 
 
 def Desaturate()
-    prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant, end_col: 5000, type: 'sg_desaturate' })
+    prop_add(g:stargate_near, 1, {
+        end_lnum: g:stargate_distant, end_col: ws.max_col, type: 'sg_desaturate' })
 enddef
 
 
@@ -46,13 +47,15 @@ def OrbitalStars(pattern: string, flags: string, orbit: number): list<list<numbe
 enddef
 
 
-def CollectStars(orbits: list<number>, cur_loc: list<number>, pat: string): list<list<number>>
+# Returns list of list of collected stars and error if any
+def CollectStars(orbits: list<number>, cur_loc: list<number>, pat: string): list<any>
     var stars = []
     for orbit in orbits
-        if strdisplaywidth(getline(orbit)) > 5000
-            msg.InfoMessage("stargate: some visible line is longer than 5000 characters."
+        if strdisplaywidth(getline(orbit)) > ws.max_col
+            msg.InfoMessage("stargate: detected a line that is longer than "
+                            .. ws.max_col .. " characters."
                             .. " It can be slow, so plugin disabled.")
-            return []
+            return [[], true]
         endif
         var orbital_stars = OrbitalStars(pat, 'Wnc', orbit)
         if orbit == cur_loc[0]
@@ -65,11 +68,11 @@ def CollectStars(orbits: list<number>, cur_loc: list<number>, pat: string): list
         endif
         stars->add(orbital_stars)
     endfor
-    return stars->flattennew(1)
+    return [stars->flattennew(1), false]
 enddef
 
 
-def GalaxyStars(pattern: string): list<list<number>>
+def GalaxyStars(pattern: string): list<any>
     const view = winsaveview()
 
     const arc = ws.OrbitalArc()
@@ -81,11 +84,11 @@ def GalaxyStars(pattern: string): list<list<number>>
 
     const pat = degrees.first .. degrees.last .. pattern
     const cur_loc = [view.lnum, view.col + 1]
-    const stars = ws.OrbitsWithoutBlackmatter(g:stargate_near, g:stargate_distant)
-                      ->CollectStars(cur_loc, pat)
+    const [stars, err] = ws.OrbitsWithoutBlackmatter(g:stargate_near, g:stargate_distant)
+                             ->CollectStars(cur_loc, pat)
 
     winrestview(view)
-    return stars
+    return [stars, err]
 enddef
 
 
@@ -137,8 +140,8 @@ def ShowStargates(destinations: list<list<number>>): dict<any>
 enddef
 
 
-export def GetDestinations(pattern: string): dict<any>
-    const destinations = GalaxyStars(ws.TransformPattern(pattern))
+export def GetDestinations(pattern: string): list<any>
+    var [destinations, err] = GalaxyStars(ws.TransformPattern(pattern))
     const length = len(destinations)
 
     var stargates: dict<any>
@@ -149,12 +152,13 @@ export def GetDestinations(pattern: string): dict<any>
     elseif length > g:stargate_limit
         msg.InfoMessage("stargate: too much popups to show - " .. length)
         stargates = {}
+        err = true
     else
         Desaturate()
         stargates = destinations->ShowStargates()
     endif
 
-    return stargates
+    return [stargates, err]
 enddef
 
 # vim: sw=4

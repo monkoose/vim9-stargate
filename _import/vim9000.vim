@@ -23,7 +23,7 @@ export def OkVIM(mode: any)
             destinations = ChooseDestinations(mode)
         else
             g:stargate_mode = false
-            destinations = sg.GetDestinations(mode)
+            [destinations, _] = sg.GetDestinations(mode)
         endif
         if !empty(destinations)
             normal! m'
@@ -186,10 +186,11 @@ def ChooseDestinations(mode: number): dict<any>
             continue
         endif
 
-        destinations = sg.GetDestinations(nrs
-                                            ->mapnew((_, v) => nr2char(v))
-                                            ->join(''))
-        if empty(destinations)
+        var error: bool
+        [destinations, error] = sg.GetDestinations(nrs
+                                                    ->mapnew((_, v) => nr2char(v))
+                                                    ->join(''))
+        if !error && empty(destinations)
             msg.Error("We can't reach there, " .. g:stargate_name .. '.')
             continue
         endif

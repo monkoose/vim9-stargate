@@ -1,6 +1,8 @@
 vim9script
 
+export const max_col = 5000
 const term_ve = &t_ve
+
 
 # Returns first window column number after signcolumn
 # Required because there are no easy way to get width of the signcolumn in vim
@@ -175,7 +177,7 @@ enddef
 
 
 export def Focus()
-    prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant, end_col: 5000, type: 'sg_focus' })
+    prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant, end_col: max_col, type: 'sg_focus' })
 enddef
 
 export def Unfocus()
