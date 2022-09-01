@@ -1,8 +1,8 @@
 vim9script
 
-import '../_import/workstation.vim' as ws
-import '../_import/vim9000.vim' as vim
-import '../_import/galaxies.vim'
+import '../import/stargate/workstation.vim' as ws
+import '../import/stargate/vim9000.vim' as vim
+import '../import/stargate/galaxies.vim'
 
 g:stargate_ignorecase = get(g:, 'stargate_ignorecase', true)
 g:stargate_limit = get(g:, 'stargate_limit', 300)
