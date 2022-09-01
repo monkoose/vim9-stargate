@@ -75,9 +75,7 @@ def Greetings()
     endif
 
     g:stargate_conceallevel = &conceallevel
-    &conceallevel = 0
-    ws.ShowShip()
-    ws.Focus()
+    ws.SetScreen()
     msg.StandardMessage(g:stargate_name .. ', choose a destination.')
 enddef
 
@@ -88,9 +86,7 @@ def Goodbye()
     endfor
     prop_remove({ type: 'sg_error' }, g:stargate_near, g:stargate_distant)
     Saturate()
-    ws.Unfocus()
-    ws.HideShip()
-    &conceallevel = g:stargate_conceallevel
+    ws.ClearScreen()
 
     # rehighlight matched paren
     doautocmd CursorMoved

@@ -1,7 +1,6 @@
 vim9script
 
 export const max_col = 5000
-const term_ve = &t_ve
 
 
 # Returns first window column number after signcolumn
@@ -178,24 +177,31 @@ export def CreatePopups()
 enddef
 
 
-export def Focus()
-    prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant, end_col: max_col, type: 'sg_focus' })
-enddef
-
-export def Unfocus()
-    prop_remove({ type: 'sg_focus' }, g:stargate_near, g:stargate_distant)
-enddef
-
-export def ShowShip()
-    prop_add(line('.'), col('.'), { type: 'sg_ship' })
+export def HideCursor()
+    g:stargate_t_ve = &t_ve
     &t_ve = ''
 enddef
 
-export def HideShip()
-    prop_remove({ type: 'sg_ship' }, g:stargate_near, g:stargate_distant)
-    &t_ve = term_ve
+
+export def ShowCursor()
+    &t_ve = g:stargate_t_ve
 enddef
 
-defcompile
+
+export def SetScreen()
+    g:stargate_conceallevel = &conceallevel
+    &conceallevel = 0
+    HideCursor()
+    prop_add(line('.'), col('.'), { type: 'sg_ship' })
+    prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant, end_col: max_col, type: 'sg_focus' })
+enddef
+
+
+export def ClearScreen()
+    prop_remove({ type: 'sg_focus' }, g:stargate_near, g:stargate_distant)
+    prop_remove({ type: 'sg_ship' }, g:stargate_near, g:stargate_distant)
+    ShowCursor()
+    &conceallevel = g:stargate_conceallevel
+enddef
 
 # vim: sw=4

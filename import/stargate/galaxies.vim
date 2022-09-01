@@ -86,16 +86,12 @@ def InputLoop(galaxies: dict<dict<number>>, independent: bool): number
         endif
 
         if !independent
-            ws.Unfocus()
-            ws.HideShip()
-            &conceallevel = g:stargate_conceallevel
+            ws.ClearScreen()
         endif
         win_gotoid(destination[char].winid)
         if !independent
             [g:stargate_near, g:stargate_distant] = ws.ReachableOrbits()
-            &conceallevel = 0
-            ws.ShowShip()
-            ws.Focus()
+            ws.SetScreen()
         endif
         break
     endwhile
@@ -129,16 +125,19 @@ export def ChangeGalaxy(independent: bool): number
     const galaxies = DisplayGalaxiesLabels(buf_nr, galaxies_info)
     var result: number
 
-    try
-        msg.StandardMessage('Choose a galaxy for the hyperjump, ' .. g:stargate_name .. '.')
-        result = InputLoop(galaxies, independent)
-    catch
-        echom v:exception
-    finally
-        for galaxy in values(galaxies)
-            popup_close(galaxy.popupid)
-        endfor
-    endtry
+    if independent
+        ws.HideCursor()
+    endif
+
+    msg.StandardMessage('Choose a galaxy for the hyperjump, ' .. g:stargate_name .. '.')
+    result = InputLoop(galaxies, independent)
+    for galaxy in values(galaxies)
+        popup_close(galaxy.popupid)
+    endfor
+
+    if independent
+        ws.ShowCursor()
+    endif
 
     if !independent && result
         msg.StandardMessage("Now choose a destination.")
