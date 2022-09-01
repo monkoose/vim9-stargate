@@ -74,7 +74,6 @@ def Greetings()
         silent! call matchdelete(3)
     endif
 
-    g:stargate_conceallevel = &conceallevel
     ws.SetScreen()
     msg.StandardMessage(g:stargate_name .. ', choose a destination.')
 enddef
