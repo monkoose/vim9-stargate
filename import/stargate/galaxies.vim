@@ -4,7 +4,7 @@ import './messages.vim' as msg
 import './workstation.vim' as ws
 
 const labels = [' ', 'f', 'j', 'd', 'l', 's', 'h', 'g', 'a', 'i', 'e', 'o', 'c', 'u']
-const galaxy_labels = expand('<sfile>:p:h:h') .. '/galaxy_labels'
+const galaxy_labels = expand('<sfile>:p:h:h:h') .. '/galaxy_labels'
 
 
 # Swap current window info into 0 index of `wininfo` parameter
