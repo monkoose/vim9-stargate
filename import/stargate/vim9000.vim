@@ -74,6 +74,8 @@ def Greetings()
         silent! call matchdelete(3)
     endif
 
+    g:stargate_conceallevel = &conceallevel
+    &conceallevel = 0
     ws.ShowShip()
     ws.Focus()
     msg.StandardMessage(g:stargate_name .. ', choose a destination.')
@@ -88,6 +90,7 @@ def Goodbye()
     Saturate()
     ws.Unfocus()
     ws.HideShip()
+    &conceallevel = g:stargate_conceallevel
 
     # rehighlight matched paren
     doautocmd CursorMoved

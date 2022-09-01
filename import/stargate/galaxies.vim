@@ -88,10 +88,12 @@ def InputLoop(galaxies: dict<dict<number>>, independent: bool): number
         if !independent
             ws.Unfocus()
             ws.HideShip()
+            &conceallevel = g:stargate_conceallevel
         endif
         win_gotoid(destination[char].winid)
         if !independent
             [g:stargate_near, g:stargate_distant] = ws.ReachableOrbits()
+            &conceallevel = 0
             ws.ShowShip()
             ws.Focus()
         endif
