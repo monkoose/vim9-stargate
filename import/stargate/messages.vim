@@ -1,7 +1,7 @@
 vim9script
 
-
 import './workstation.vim' as ws
+
 
 def Message(text: string, color: string)
     redraw

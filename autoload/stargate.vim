@@ -10,6 +10,7 @@ g:stargate_chars = get(g:, 'stargate_chars', 'fjdklshgaewiomc')->split('\zs')
 g:stargate_name = get(g:, 'stargate_name', 'Human')
 g:stargate_keymaps = get(g:, 'stargate_keymaps', {})
 
+
 def Highlight()
     highlight default StargateFocus guifg=#958c6a
     highlight default StargateDesaturate guifg=#49423f
@@ -24,26 +25,23 @@ def Highlight()
     highlight default StargateErrorMessage guifg=#e36659
 enddef
 
+
+Highlight()
 augroup ReapplyHighlight
     autocmd!
     autocmd ColorScheme * Highlight()
 augroup END
 
-Highlight()
-
 if empty(prop_type_get('sg_focus'))
     prop_type_add('sg_focus', { highlight: 'StargateFocus', combine: false, priority: 1000})
 endif
-
 if empty(prop_type_get('sg_desaturate'))
     prop_type_add('sg_desaturate', {
         highlight: 'StargateDesaturate', combine: false, priority: 1005})
 endif
-
 if empty(prop_type_get('sg_error'))
     prop_type_add('sg_error', { highlight: 'StargateError', combine: false, priority: 1010 })
 endif
-
 if empty(prop_type_get('sg_ship'))
     prop_type_add('sg_ship', { highlight: 'StargateShip', combine: false, priority: 1015})
 endif
@@ -51,9 +49,11 @@ endif
 # Initialize hidden popup windows for stargates hints
 ws.CreatePopups()
 
+
 export def OKvim(mode: any)
     vim.OkVIM(mode)
 enddef
+
 
 export def Galaxy()
     galaxies.ChangeGalaxy(true)
