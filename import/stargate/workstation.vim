@@ -6,13 +6,12 @@ export const max_col = 5000
 # Returns first window column number after signcolumn
 # Required because there are no easy way to get width of the signcolumn in vim
 export def DisplayLeftEdge(): number
-    const view = winsaveview()
     const ve = &virtualedit
     &virtualedit = 'all'
     normal! 0
     const degree = wincol()
     &virtualedit = ve
-    winrestview(view)
+    winrestview(g:stargate_winview)
     return degree
 enddef
 

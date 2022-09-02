@@ -39,7 +39,7 @@ export def Error(message: string)
 enddef
 
 
-export def InfoMessage(message: string)
+export def Warning(message: string)
     redraw
     echohl WarningMsg
     echom message

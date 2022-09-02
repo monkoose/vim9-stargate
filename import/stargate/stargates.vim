@@ -48,15 +48,15 @@ enddef
 
 
 # Returns list of list of collected stars and error if any
-def CollectStars(orbits: list<number>, cur_loc: list<number>, pat: string): list<any>
+def CollectStars(orbits: list<number>, cur_loc: list<number>, pat: string): list<list<number>>
     var stars = []
     for orbit in orbits
         if strdisplaywidth(getline(orbit)) > ws.max_col
-            msg.InfoMessage("stargate: detected a line that is longer than "
+            throw "stargate: detected a line that is longer than "
                             .. ws.max_col .. " characters."
-                            .. " It can be slow, so plugin disabled.")
-            return [[], true]
+                            .. " It can be slow, so plugin disabled."
         endif
+
         var orbital_stars = OrbitalStars(pat, 'Wnc', orbit)
         if orbit == cur_loc[0]
             for i in range(len(orbital_stars))
@@ -68,13 +68,11 @@ def CollectStars(orbits: list<number>, cur_loc: list<number>, pat: string): list
         endif
         stars->add(orbital_stars)
     endfor
-    return [stars->flattennew(1), false]
+    return stars->flattennew(1)
 enddef
 
 
-def GalaxyStars(pattern: string): list<any>
-    const view = winsaveview()
-
+def GalaxyStars(pattern: string): list<list<number>>
     const arc = ws.OrbitalArc()
     var degrees = {first: '', last: ''}
     if !&wrap
@@ -83,12 +81,15 @@ def GalaxyStars(pattern: string): list<any>
     endif
 
     const pat = degrees.first .. degrees.last .. pattern
-    const cur_loc = [view.lnum, view.col + 1]
-    const [stars, err] = ws.OrbitsWithoutBlackmatter(g:stargate_near, g:stargate_distant)
-                             ->CollectStars(cur_loc, pat)
+    const cur_loc = [
+        g:stargate_winview.lnum,
+        g:stargate_winview.col + 1
+    ]
+    const stars = ws.OrbitsWithoutBlackmatter(g:stargate_near, g:stargate_distant)
+                     ->CollectStars(cur_loc, pat)
 
-    winrestview(view)
-    return [stars, err]
+    winrestview(g:stargate_winview)
+    return stars
 enddef
 
 
@@ -140,8 +141,8 @@ def ShowStargates(destinations: list<list<number>>): dict<any>
 enddef
 
 
-export def GetDestinations(pattern: string): list<any>
-    var [destinations, err] = GalaxyStars(ws.TransformPattern(pattern))
+export def GetDestinations(pattern: string): dict<any>
+    var destinations = GalaxyStars(ws.TransformPattern(pattern))
     const length = len(destinations)
 
     var stargates: dict<any>
@@ -150,15 +151,13 @@ export def GetDestinations(pattern: string): list<any>
     elseif length == 1
         stargates = {jump: {orbit: destinations[0][0], degree: destinations[0][1]}}
     elseif length > g:stargate_limit
-        msg.InfoMessage("stargate: too much popups to show - " .. length)
-        stargates = {}
-        err = true
+        throw "stargate: too much popups to show - " .. length
     else
         Desaturate()
         stargates = destinations->ShowStargates()
     endif
 
-    return [stargates, err]
+    return stargates
 enddef
 
 # vim: sw=4

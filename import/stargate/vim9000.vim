@@ -23,7 +23,7 @@ export def OkVIM(mode: any)
             destinations = ChooseDestinations(mode)
         else
             g:stargate_mode = false
-            [destinations, _] = sg.GetDestinations(mode)
+            destinations = sg.GetDestinations(mode)
         endif
         if !empty(destinations)
             normal! m'
@@ -34,9 +34,14 @@ export def OkVIM(mode: any)
                 UseStargate(destinations)
             endif
         endif
-    catch /.*/
-        redraw
-        execute 'echoerr "' .. v:exception .. '"'
+    catch
+        winrestview(g:stargate_winview)
+        if v:exception =~ "^\s*stargate:"
+            msg.Warning(v:exception)
+        else
+            redraw
+            execute 'echoerr "' .. v:exception .. '"'
+        endif
     finally
         Goodbye()
     endtry
@@ -56,6 +61,7 @@ enddef
 
 
 def Greetings()
+    g:stargate_winview = winsaveview()
     start_mode = mode()
     in_visual_mode = start_mode != 'n'
     if in_visual_mode
@@ -176,19 +182,19 @@ def ChooseDestinations(mode: number): dict<any>
             elseif !galaxies.ChangeGalaxy(false)
                 return {}
             endif
+            g:stargate_winview = winsaveview()
+
             # if current window after the jump is in terminal or insert modes - quit stargate
             if match(mode(), '[ti]') == 0
-                msg.InfoMessage("stargate: can't work in terminal or insert mode.")
-                return {}
+                throw "stargate: can't work in terminal or insert mode."
             endif
             continue
         endif
 
-        var error: bool
-        [destinations, error] = sg.GetDestinations(nrs
-                                                    ->mapnew((_, v) => nr2char(v))
-                                                    ->join(''))
-        if !error && empty(destinations)
+        destinations = sg.GetDestinations(nrs
+                                            ->mapnew((_, v) => nr2char(v))
+                                            ->join(''))
+        if empty(destinations)
             msg.Error("We can't reach there, " .. g:stargate_name .. '.')
             continue
         endif
