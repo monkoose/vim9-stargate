@@ -1,6 +1,7 @@
 vim9script
 
 export const max_col = 5000
+const in_gvim = has('gui_running')
 
 
 # Returns first window column number after signcolumn
@@ -177,13 +178,22 @@ enddef
 
 
 export def HideCursor()
-    g:stargate_t_ve = &t_ve
-    &t_ve = ''
+    if in_gvim
+        g:stargate_cursor = hlget('Cursor')
+        hlset([{name: 'Cursor', cleared: true}])
+    else
+        g:stargate_cursor = &t_ve
+        &t_ve = ''
+    endif
 enddef
 
 
 export def ShowCursor()
-    &t_ve = g:stargate_t_ve
+    if in_gvim
+        hlset(g:stargate_cursor)
+    else
+        &t_ve = g:stargate_cursor
+    endif
 enddef
 
 
