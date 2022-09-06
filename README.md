@@ -131,6 +131,7 @@ your color scheme.
 | StargateVIM9000       | color for VIM9000 name in the command line                |
 | StargateMessage       | color of the standard message from VIM9000                |
 | StargateErrorMessage  | color of the error message from VIM9000                   |
+| StargateVisual        | color of the visual selection when stargate is active     |
 
 Defaults are
 ```vim
@@ -145,10 +146,14 @@ highlight default StargateShip guifg=#111111 guibg=#caa247
 highlight default StargateVIM9000 guifg=#111111 guibg=#b2809f gui=bold cterm=bold
 highlight default StargateMessage guifg=#a5b844
 highlight default StargateErrorMessage guifg=#e36659
+highlight default link StargateVisual Visual
 ```
 
 Remove `default` from this list and add any highlight group you want to change
 into your vimrc.
+
+Change StargateVisual when visual selection highlight of the current
+colorscheme has bad contrast with other stargate colors.
 
 ## FAQ
 

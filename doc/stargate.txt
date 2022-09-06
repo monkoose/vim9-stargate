@@ -201,5 +201,12 @@ StargateErrorMessage                                    *StargateErrorMessage*
         Highlight for a message from VIM9000 when error invoked.
         `Default is guifg=#e36659`
 
+StargateVisual                                                *StargateVisual*
+
+        Highlight for visual selection when stargate is active.
+        Change it if visual selection of the current colorscheme has bad
+        contrast with other stargate highlights.
+        `Default links to Visual`
+
 ==============================================================================
 vim:tw=78:ft=help:norl:fen:
