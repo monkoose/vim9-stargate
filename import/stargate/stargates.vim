@@ -1,6 +1,5 @@
 vim9script
 
-import './messages.vim' as msg
 import './workstation.vim' as ws
 
 
