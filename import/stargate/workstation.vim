@@ -5,15 +5,9 @@ const in_gvim = has('gui_running')
 
 
 # Returns first window column number after signcolumn
-# Required because there are no easy way to get width of the signcolumn in vim
 export def DisplayLeftEdge(): number
-    const ve = &virtualedit
-    &virtualedit = 'all'
-    normal! 0
-    const degree = wincol()
-    &virtualedit = ve
-    winrestview(g:stargate_winview)
-    return degree
+    return win_getid()
+            ->getwininfo()[0].textoff + 1
 enddef
 
 
