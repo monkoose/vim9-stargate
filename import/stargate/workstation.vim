@@ -1,7 +1,11 @@
 vim9script
 
 export const max_col = 5000
-const in_gvim = has('gui_running')
+export var label_windows: dict<number>
+export var winview: dict<any>
+export var win_topline: number
+export var win_botline: number
+var conceal_level: number
 
 
 # Returns first window column number after signcolumn
@@ -93,8 +97,8 @@ enddef
 
 
 # Returns modified pattern so it can be processed by searchpos()
-export def TransformPattern(pattern: string): string
-    if !g:stargate_mode
+export def TransformPattern(pattern: string, is_regex: bool): string
+    if is_regex
         return pattern
     elseif pattern == ' '
         return '\S\zs\s'
@@ -174,50 +178,54 @@ export def SafeGetChar(): list<any>
 enddef
 
 
-export def CreatePopups()
-    var popups = {}
+export def CreateLabelWindows()
+    label_windows = {}
     const labels = LabelLists(g:stargate_chars, g:stargate_limit).labels->flattennew(1)
     for ds in labels
-        popups[ds] = popup_create(ds, { line: 0, col: 0, hidden: true, wrap: false })
+        label_windows[ds] = popup_create(ds, { line: 0, col: 0, hidden: true, wrap: false })
     endfor
-    g:stargate_popups = popups
 enddef
 
 
-export def HideCursor()
-    if in_gvim
-        g:stargate_cursor = hlget('Cursor')
+export var HideCursor: func()
+export var ShowCursor: func()
+# Hiding the cursor when awaiting for char of getchar() function
+# done differently in gui and terminal
+if has('gui_running')
+    var cursor_state: list<dict<any>>
+    HideCursor = () => {
+        cursor_state = hlget('Cursor')
         hlset([{name: 'Cursor', cleared: true}])
-    else
-        g:stargate_cursor = &t_ve
+    }
+    ShowCursor = () => {
+        hlset(cursor_state)
+    }
+else
+    var cursor_state: string
+    HideCursor = () => {
+        cursor_state = &t_ve
         &t_ve = ''
-    endif
-enddef
-
-
-export def ShowCursor()
-    if in_gvim
-        hlset(g:stargate_cursor)
-    else
-        &t_ve = g:stargate_cursor
-    endif
-enddef
+    }
+    ShowCursor = () => {
+        &t_ve = cursor_state
+    }
+endif
 
 
 export def SetScreen()
-    g:stargate_conceallevel = &conceallevel
+    conceal_level = &conceallevel
     &conceallevel = 0
     HideCursor()
     prop_add(line('.'), col('.'), { type: 'sg_ship' })
-    prop_add(g:stargate_near, 1, { end_lnum: g:stargate_distant, end_col: max_col, type: 'sg_focus' })
+    prop_add(win_topline, 1, { end_lnum: win_botline, end_col: max_col, type: 'sg_focus' })
 enddef
 
 
 export def ClearScreen()
-    prop_remove({ type: 'sg_focus' }, g:stargate_near, g:stargate_distant)
-    prop_remove({ type: 'sg_ship' }, g:stargate_near, g:stargate_distant)
+    prop_remove({ type: 'sg_focus' }, win_topline, win_botline)
+    prop_remove({ type: 'sg_ship' }, win_topline, win_botline)
     ShowCursor()
-    &conceallevel = g:stargate_conceallevel
+    &conceallevel = conceal_level
 enddef
 
 # vim: sw=4

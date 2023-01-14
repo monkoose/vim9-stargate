@@ -47,7 +47,7 @@ for [name, hl, priority] in [
 endfor
 
 # Initialize hidden popup windows for stargates hints
-ws.CreatePopups()
+ws.CreateLabelWindows()
 
 
 export def OKvim(mode: any)

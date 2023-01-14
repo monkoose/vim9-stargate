@@ -25,12 +25,12 @@ enddef
 
 export def Error(message: string)
     def RemoveError(t: number)
-        prop_remove({ type: 'sg_error' }, g:stargate_near, g:stargate_distant + 1)
+        prop_remove({ type: 'sg_error' }, ws.win_topline, ws.win_botline + 1)
         redraw
     enddef
 
-    prop_add(g:stargate_near, 1, {
-        end_lnum: g:stargate_distant,
+    prop_add(ws.win_topline, 1, {
+        end_lnum: ws.win_botline,
         end_col: ws.max_col,
         type: 'sg_error'
     })

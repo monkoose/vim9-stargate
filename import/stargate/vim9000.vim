@@ -20,11 +20,9 @@ export def OkVIM(mode: any)
         Greetings()
         var destinations: dict<any>
         if type(mode) == v:t_number
-            g:stargate_mode = true
             destinations = ChooseDestinations(mode)
         else
-            g:stargate_mode = false
-            destinations = sg.GetDestinations(mode)
+            destinations = sg.GetDestinations(mode, true)
         endif
         if !empty(destinations)
             normal! m'
@@ -36,7 +34,7 @@ export def OkVIM(mode: any)
             endif
         endif
     catch
-        winrestview(g:stargate_winview)
+        winrestview(ws.winview)
         if v:exception =~ "^\s*stargate:"
             msg.Warning(v:exception)
         else
@@ -57,19 +55,19 @@ enddef
 
 
 def Saturate()
-    prop_remove({ type: 'sg_error' }, g:stargate_near, g:stargate_distant)
-    prop_remove({ type: 'sg_desaturate' }, g:stargate_near, g:stargate_distant)
+    prop_remove({ type: 'sg_error' }, ws.win_topline, ws.win_botline)
+    prop_remove({ type: 'sg_desaturate' }, ws.win_topline, ws.win_botline)
 enddef
 
 
 def HideStarsHints()
-    for v in values(g:stargate_popups)
+    for v in values(ws.label_windows)
         popup_hide(v)
     endfor
 enddef
 
 def Greetings()
-    g:stargate_winview = winsaveview()
+    ws.winview = winsaveview()
 
     in_visual_mode = mode() != 'n'
     if in_visual_mode
@@ -79,7 +77,7 @@ def Greetings()
         hlset([{name: 'Visual', cleared: true, linksto: 'StargateVisual'}])
     endif
 
-    [g:stargate_near, g:stargate_distant] = ws.ReachableOrbits()
+    [ws.win_topline, ws.win_botline] = ws.ReachableOrbits()
 
     is_hlsearch = v:hlsearch
     if is_hlsearch
@@ -116,7 +114,7 @@ enddef
 
 def ShowFiltered(stargates: dict<any>)
     for [label, stargate] in items(stargates)
-        const id = g:stargate_popups[label]
+        const id = ws.label_windows[label]
         const scr_pos = screenpos(0, stargate.orbit, stargate.degree)
         popup_move(id, { line: scr_pos.row, col: scr_pos.col })
         popup_setoptions(id, { highlight: stargate.color, zindex: stargate.zindex })
@@ -165,6 +163,7 @@ enddef
 def ChooseDestinations(mode: number): dict<any>
     var to_galaxy = false
     var destinations = {}
+    var pattern: string
     while true
         var nrs = []
         for _ in range(mode)
@@ -190,7 +189,7 @@ def ChooseDestinations(mode: number): dict<any>
             elseif !galaxies.ChangeGalaxy(false)
                 return {}
             endif
-            g:stargate_winview = winsaveview()
+            ws.winview = winsaveview()
 
             # if current window after the jump is in terminal or insert modes - quit stargate
             if match(mode(), '[ti]') == 0
@@ -199,9 +198,10 @@ def ChooseDestinations(mode: number): dict<any>
             continue
         endif
 
-        destinations = sg.GetDestinations(nrs
-                                            ->mapnew((_, v) => nr2char(v))
-                                            ->join(''))
+        pattern = nrs
+                    ->mapnew((_, v) => nr2char(v))
+                    ->join('')
+        destinations = sg.GetDestinations(pattern, false)
         if empty(destinations)
             msg.Error("We can't reach there, " .. g:stargate_name .. '.')
             continue
