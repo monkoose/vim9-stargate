@@ -17,6 +17,18 @@ def ListcharsHasPrecedes(): bool
 enddef
 
 
+# Adds a text property only when it is not already present
+export def AddPropType(name: string, highlight: string, priority: number)
+    if empty(prop_type_get(name))
+        prop_type_add(name, {
+            highlight: highlight,
+            combine: false,
+            priority: priority
+        })
+    endif
+enddef
+
+
 # Returns first and last visible virtual columns of the buffer in the current window
 export def OrbitalArc(): dict<number>
     const edge = DisplayLeftEdge()
@@ -78,6 +90,7 @@ enddef
 export def InOperatorPendingMode(): bool
     return state()[0] == 'o'
 enddef
+
 
 # Returns modified pattern so it can be processed by searchpos()
 export def TransformPattern(pattern: string): string

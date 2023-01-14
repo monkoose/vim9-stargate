@@ -11,6 +11,7 @@ g:stargate_name = get(g:, 'stargate_name', 'Human')
 g:stargate_keymaps = get(g:, 'stargate_keymaps', {})
 
 
+# Creates plugin highlights
 def Highlight()
     highlight default StargateFocus guifg=#958c6a
     highlight default StargateDesaturate guifg=#49423f
@@ -27,25 +28,23 @@ def Highlight()
 enddef
 
 
+# Initialize highlights
 Highlight()
-augroup ReapplyHighlight
+
+# Apply highlights on a colorscheme change
+augroup StargateReapplyHighlights
     autocmd!
     autocmd ColorScheme * Highlight()
 augroup END
 
-if empty(prop_type_get('sg_focus'))
-    prop_type_add('sg_focus', { highlight: 'StargateFocus', combine: false, priority: 1000})
-endif
-if empty(prop_type_get('sg_desaturate'))
-    prop_type_add('sg_desaturate', {
-        highlight: 'StargateDesaturate', combine: false, priority: 1005})
-endif
-if empty(prop_type_get('sg_error'))
-    prop_type_add('sg_error', { highlight: 'StargateError', combine: false, priority: 1010 })
-endif
-if empty(prop_type_get('sg_ship'))
-    prop_type_add('sg_ship', { highlight: 'StargateShip', combine: false, priority: 1015})
-endif
+# Add plugin property types
+for [name, hl, priority] in [
+        ['sg_focus', 'StargateFocus', 1000],
+        ['sg_desaturate', 'StargateDesaturate', 1001],
+        ['sg_error', 'StargateError', 1002],
+        ['sg_ship', 'StargateShip', 1003]]
+    ws.AddPropType(name, hl, priority)
+endfor
 
 # Initialize hidden popup windows for stargates hints
 ws.CreatePopups()
