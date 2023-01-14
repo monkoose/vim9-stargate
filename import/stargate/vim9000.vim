@@ -66,6 +66,7 @@ def HideStarsHints()
     endfor
 enddef
 
+
 def Greetings()
     ws.winview = winsaveview()
 

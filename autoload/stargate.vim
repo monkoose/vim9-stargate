@@ -50,10 +50,10 @@ endfor
 ws.CreateLabelWindows()
 
 
+# Public API functions
 export def OKvim(mode: any)
     vim.OkVIM(mode)
 enddef
-
 
 export def Galaxy()
     galaxies.ChangeGalaxy(true)
