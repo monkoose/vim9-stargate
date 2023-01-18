@@ -55,8 +55,8 @@ enddef
 
 
 def Saturate()
-    prop_remove({ type: 'sg_error' }, ws.win_topline, ws.win_botline)
-    prop_remove({ type: 'sg_desaturate' }, ws.win_topline, ws.win_botline)
+    ws.RemoveMatchHighlight(ws.win['StargateError'])
+    ws.RemoveMatchHighlight(ws.win['StargateDesaturate'])
 enddef
 
 
@@ -78,7 +78,7 @@ def Greetings()
         hlset([{name: 'Visual', cleared: true, linksto: 'StargateVisual'}])
     endif
 
-    [ws.win_topline, ws.win_botline] = ws.ReachableOrbits()
+    ws.UpdateWinBounds()
 
     is_hlsearch = v:hlsearch
     if is_hlsearch
@@ -86,7 +86,7 @@ def Greetings()
     endif
 
     if match_paren_enabled
-        silent! call matchdelete(3)
+        ws.RemoveMatchHighlight(3)
     endif
 
     ws.SetScreen()

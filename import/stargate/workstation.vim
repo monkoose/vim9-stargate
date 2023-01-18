@@ -3,9 +3,33 @@ vim9script
 export const max_col = 5000
 export var label_windows: dict<number>
 export var winview: dict<any>
-export var win_topline: number
-export var win_botline: number
+export var win: dict<any> = {
+    topline: 0,
+    botline: 0,
+    lines_range: [],
+    StargateFocus: 0,
+    StargateDesaturate: 0,
+    StargateError: 0,
+}
 var conceal_level: number
+var fake_cursor_match_id: number
+
+
+# Creates plugin highlights
+export def CreateHighlights()
+    highlight default StargateFocus guifg=#958c6a
+    highlight default StargateDesaturate guifg=#49423f
+    highlight default StargateError guifg=#d35b4b
+    highlight default StargateLabels guifg=#caa247 guibg=#171e2c
+    highlight default StargateErrorLabels guifg=#caa247 guibg=#551414
+    highlight default StargateMain guifg=#f2119c gui=bold cterm=bold
+    highlight default StargateSecondary guifg=#11eb9c gui=bold cterm=bold
+    highlight default StargateShip guifg=#111111 guibg=#caa247
+    highlight default StargateVIM9000 guifg=#111111 guibg=#b2809f gui=bold cterm=bold
+    highlight default StargateMessage guifg=#a5b844
+    highlight default StargateErrorMessage guifg=#e36659
+    highlight default link StargateVisual Visual
+enddef
 
 
 # Returns first window column number after signcolumn
@@ -21,17 +45,19 @@ def ListcharsHasPrecedes(): bool
 enddef
 
 
-# Adds a text property only when it is not already present
-export def AddPropType(name: string, highlight: string, priority: number)
-    if empty(prop_type_get(name))
-        prop_type_add(name, {
-            highlight: highlight,
-            combine: false,
-            priority: priority
-        })
-    endif
+# Creates new matchadd highlight and additionally removes any leftover
+# highlights from the previous highlighting of this `match_group`
+# Useful when adding match highlight with the `timer_start()`
+export def AddMatchHighlight(match_group: string, priority: number)
+    const id = matchaddpos(match_group, win.lines_range, priority)
+    RemoveMatchHighlight(win[match_group])
+    win[match_group] = id
 enddef
 
+# Silently removes match highlight with `match_id`
+export def RemoveMatchHighlight(match_id: number)
+    silent! call matchdelete(match_id)
+enddef
 
 # Returns first and last visible virtual columns of the buffer in the current window
 export def OrbitalArc(): dict<number>
@@ -47,9 +73,11 @@ export def OrbitalArc(): dict<number>
 enddef
 
 
-# Returns top and bottom visible lines numbers of the current window
-export def ReachableOrbits(): list<number>
-    return [line('w0'), line('w$')]
+# Sets some new values for global `win` dictionary
+export def UpdateWinBounds()
+    win.topline = line('w0')
+    win.botline = line('w$')
+    win.lines_range = range(win.topline, win.botline)
 enddef
 
 
@@ -216,14 +244,15 @@ export def SetScreen()
     conceal_level = &conceallevel
     &conceallevel = 0
     HideCursor()
-    prop_add(line('.'), col('.'), { type: 'sg_ship' })
-    prop_add(win_topline, 1, { end_lnum: win_botline, end_col: max_col, type: 'sg_focus' })
+
+    fake_cursor_match_id = matchaddpos('StargateShip', [[line('.'), col('.')]], 1010)
+    AddMatchHighlight('StargateFocus', 1000)
 enddef
 
 
 export def ClearScreen()
-    prop_remove({ type: 'sg_focus' }, win_topline, win_botline)
-    prop_remove({ type: 'sg_ship' }, win_topline, win_botline)
+    RemoveMatchHighlight(win['StargateFocus'])
+    RemoveMatchHighlight(fake_cursor_match_id)
     ShowCursor()
     &conceallevel = conceal_level
 enddef

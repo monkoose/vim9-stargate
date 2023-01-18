@@ -4,8 +4,7 @@ import './workstation.vim' as ws
 
 
 def Desaturate()
-    prop_add(ws.win_topline, 1, {
-        end_lnum: ws.win_botline, end_col: ws.max_col, type: 'sg_desaturate' })
+    ws.AddMatchHighlight('StargateDesaturate', 1001)
 enddef
 
 
@@ -84,7 +83,7 @@ def GalaxyStars(pattern: string): list<list<number>>
         ws.winview.lnum,
         ws.winview.col + 1
     ]
-    const stars = ws.OrbitsWithoutBlackmatter(ws.win_topline, ws.win_botline)
+    const stars = ws.OrbitsWithoutBlackmatter(ws.win.topline, ws.win.botline)
                      ->CollectStars(cur_loc, pat)
 
     winrestview(ws.winview)

@@ -33,13 +33,16 @@ func workstation.DisplayLeftEdge()
 endfunc
 
 
-func workstation.ReachableOrbits()
-  call setline(1, repeat(['line'], 30))
+func workstation.UpdateWinBounds()
+  call setline(1, repeat(['line'], 20))
   normal 10ggzt
-  call s:assert.equals(s:ws.ReachableOrbits()[0], line('w0'),
-        \ 'first visible line number')
-  call s:assert.equals(s:ws.ReachableOrbits()[1], line('w$'),
-        \ 'last visible line number')
+  call s:ws.UpdateWinBounds()
+  call s:assert.equals(s:ws.win.topline, line('w0'),
+        \ 'first visible line number ')
+  call setline(1, repeat(['line'], 20))
+  normal 10ggzt
+  call s:assert.equals(s:ws.win.botline, line('w$'),
+        \ 'last visible line number ')
 endfunc
 
 

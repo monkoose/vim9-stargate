@@ -90,7 +90,7 @@ def InputLoop(galaxies: dict<dict<number>>, independent: bool): number
         endif
         win_gotoid(destination[char].winid)
         if !independent
-            [ws.win_topline, ws.win_botline] = ws.ReachableOrbits()
+            ws.UpdateWinBounds()
             ws.SetScreen()
         endif
         break
@@ -111,7 +111,7 @@ export def ChangeGalaxy(independent: bool): number
         # when starts with stargate#Galaxy() call we need to set g variables
         # to highlight that range on error
         if independent
-            [ws.win_topline, ws.win_botline] = ws.ReachableOrbits()
+            ws.UpdateWinBounds()
         endif
         msg.Error(g:stargate_name .. ", your species can't outsmart me.")
         return 1

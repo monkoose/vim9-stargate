@@ -25,15 +25,13 @@ enddef
 
 export def Error(message: string)
     def RemoveError(t: number)
-        prop_remove({ type: 'sg_error' }, ws.win_topline, ws.win_botline + 1)
+        ws.RemoveMatchHighlight(ws.win['StargateError'])
+        # redraw required, because while getchar() is active
+        # the screen is not redrawn normally
         redraw
     enddef
 
-    prop_add(ws.win_topline, 1, {
-        end_lnum: ws.win_botline,
-        end_col: ws.max_col,
-        type: 'sg_error'
-    })
+    ws.AddMatchHighlight('StargateError', 1002)
     ErrorMessage(message)
     timer_start(150, RemoveError)
 enddef
