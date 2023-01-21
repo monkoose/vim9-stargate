@@ -110,7 +110,7 @@ def ProcessKeymap(pattern: string): string
         if empty(rhs)
             pat ..= char
         else
-            pat ..= '\[' .. char .. rhs .. ']'
+            pat ..= $'\[{char}{rhs}]'
         endif
     endfor
 

@@ -55,7 +55,7 @@ func workstation.OrbitalArc()
         \ 'last visible virtual column for empty buffer')
 
   call setline(1, repeat('word ', 200))
-  execute 'normal ' .. win_width .. 'l'
+  exe 'normal ' .. win_width .. 'l'
   let ws.winview = winsaveview()
   call s:assert.equals(s:ws.OrbitalArc().first, win_width + 1,
         \ 'first virtual column for shifted text')

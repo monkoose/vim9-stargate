@@ -35,11 +35,11 @@ export def OkVIM(mode: any)
         endif
     catch
         winrestview(ws.winview)
-        if v:exception =~ "^\s*stargate:"
+        if v:exception =~ '^\s*stargate:'
             msg.Warning(v:exception)
         else
             redraw
-            execute 'echoerr "' .. v:exception .. '"'
+            exe $'echoerr "{v:exception}"'
         endif
     finally
         Goodbye()
@@ -90,7 +90,7 @@ def Greetings()
     endif
 
     ws.SetScreen()
-    msg.StandardMessage(g:stargate_name .. ', choose a destination.')
+    msg.StandardMessage($'{g:stargate_name}, choose a destination.')
 enddef
 
 
@@ -146,7 +146,7 @@ def UseStargate(destinations: dict<any>)
         endfor
 
         if empty(filtered)
-            msg.Error('Wrong stargate, ' .. g:stargate_name .. '. Choose another one.')
+            msg.Error($'Wrong stargate, {g:stargate_name}. Choose another one.')
         elseif len(filtered) == 1
             msg.BlankMessage()
             cursor(filtered[''].orbit, filtered[''].degree)
@@ -186,7 +186,7 @@ def ChooseDestinations(mode: number): dict<any>
         if to_galaxy
             to_galaxy = false
             if in_visual_mode || ws.InOperatorPendingMode()
-                msg.Error('It is impossible to do now, ' .. g:stargate_name .. '.')
+                msg.Error($'It is impossible to do now, {g:stargate_name}.')
             elseif !galaxies.ChangeGalaxy(false)
                 return {}
             endif
@@ -204,7 +204,7 @@ def ChooseDestinations(mode: number): dict<any>
                     ->join('')
         destinations = sg.GetDestinations(pattern, false)
         if empty(destinations)
-            msg.Error("We can't reach there, " .. g:stargate_name .. '.')
+            msg.Error($"We can't reach there, {g:stargate_name}.")
             continue
         endif
         break

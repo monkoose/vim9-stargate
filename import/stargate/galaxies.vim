@@ -61,7 +61,7 @@ def LabelsError(gal: dict<any>)
         for galaxy in galaxies
             popup_setoptions(galaxy.popupid, { highlight: highlight })
         endfor
-        msg.ErrorMessage("Our ship can't reach that galaxy, " .. g:stargate_name)
+        msg.ErrorMessage($"Our ship can't reach that galaxy, {g:stargate_name}")
     enddef
 
     timer_start(5, (t) => Recolor('StargateErrorLabels'))
@@ -113,7 +113,7 @@ export def ChangeGalaxy(independent: bool): number
         if independent
             ws.UpdateWinBounds()
         endif
-        msg.Error(g:stargate_name .. ", your species can't outsmart me.")
+        msg.Error($"{g:stargate_name}, your species can't outsmart me.")
         return 1
     endif
 
@@ -129,7 +129,7 @@ export def ChangeGalaxy(independent: bool): number
         ws.HideCursor()
     endif
 
-    msg.StandardMessage('Choose a galaxy for the hyperjump, ' .. g:stargate_name .. '.')
+    msg.StandardMessage($'Choose a galaxy for the hyperjump, {g:stargate_name}.')
     result = InputLoop(galaxies, independent)
     for galaxy in values(galaxies)
         popup_close(galaxy.popupid)
@@ -140,7 +140,7 @@ export def ChangeGalaxy(independent: bool): number
     endif
 
     if !independent && result
-        msg.StandardMessage("Now choose a destination.")
+        msg.StandardMessage('Now choose a destination.')
     else
         msg.BlankMessage()
     endif

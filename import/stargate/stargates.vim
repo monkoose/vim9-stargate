@@ -38,7 +38,7 @@ def OrbitalStars(pattern: string, flags: string, orbit: number): list<list<numbe
     var star = searchpos(pattern, flags, orbit)
     while star[0] != 0
         stars->add(star)
-        const first = '\%>' .. star[1] .. 'c'
+        const first = $'\%>{star[1]}c'
         star = searchpos(first .. pattern, flags, orbit)
     endwhile
     return stars
@@ -50,9 +50,8 @@ def CollectStars(orbits: list<number>, cur_loc: list<number>, pat: string): list
     var stars = []
     for orbit in orbits
         if strdisplaywidth(getline(orbit)) > ws.max_col
-            throw "stargate: detected a line that is longer than "
-                            .. ws.max_col .. " characters."
-                            .. " It can be slow, so plugin disabled."
+            throw $'stargate: detected a line that is longer than {ws.max_col}' ..
+                ' characters. It can be slow, so plugin disabled.'
         endif
 
         var orbital_stars = OrbitalStars(pat, 'Wnc', orbit)
@@ -74,8 +73,8 @@ def GalaxyStars(pattern: string): list<list<number>>
     const arc = ws.OrbitalArc()
     var degrees = {first: '', last: ''}
     if !&wrap
-        degrees.first = '\%>' .. (arc.first - 1) .. 'v'
-        degrees.last = '\%<' .. (arc.last + 1) .. 'v'
+        degrees.first = $'\%>{arc.first - 1}v'
+        degrees.last = $'\%<{arc.last + 1}v'
     endif
 
     const pat = degrees.first .. degrees.last .. pattern
@@ -149,7 +148,7 @@ export def GetDestinations(pattern: string, is_regex: bool): dict<any>
     elseif length == 1
         stargates = {jump: {orbit: destinations[0][0], degree: destinations[0][1]}}
     elseif length > g:stargate_limit
-        throw "stargate: too much popups to show - " .. length
+        throw $'stargate: too much popups to show - {length}'
     else
         Desaturate()
         stargates = destinations->ShowStargates()

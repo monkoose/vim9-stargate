@@ -5,10 +5,10 @@ import './workstation.vim' as ws
 
 def Message(text: string, color: string)
     redraw
-    execute 'echohl StargateVIM9000'
+    exe 'echohl StargateVIM9000'
     echo ' VIM9000 '
-    execute 'echohl ' .. color
-    echon ' ' .. text .. ' '
+    exe $'echohl {color}'
+    echon $' {text} '
     echohl None
 enddef
 
